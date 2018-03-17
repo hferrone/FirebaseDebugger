@@ -245,12 +245,12 @@ namespace FBDebugger
 		/// </summary>
         private void OnEnable() 
 		{
+			Debug.Log("OnEnable was called...");
+
             InitStyles();
 			InitSerializedObjects();
 			SubscribeEvents();
 			FBDataService.instance.LoadData(_childNodes);
-
-			Debug.Log("OnEnable was called...");
         }
 
 		/// <summary>
@@ -259,8 +259,8 @@ namespace FBDebugger
 		/// </summary>
         private void OnDisable() 
 		{
+			Debug.Log("OnDisable was called...");
 			UnsubscribeEvents();
-            Debug.Log("OnDisable was called...");
         }
 
 		/// <summary>
@@ -269,8 +269,8 @@ namespace FBDebugger
 		/// </summary>
         private void OnDestroy() 
 		{
-			UnsubscribeEvents();
             Debug.Log("OnDestroy was called...");
+			UnsubscribeEvents();
         }
         #endregion
 
