@@ -1,13 +1,12 @@
 # FirebaseDebugger
-Editor Window for debugging Firebase Realtime Database projects in Unity.
-
-# Project Title
-
-One Paragraph of project description goes here
+The idea for this project started 
+This project is an Editor Window for debugging Firebase Realtime Database projects in Unity.
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+All the setup for this tool is done programmatically, so the only thing you're responsible for is going to Tools > FBDebugger and clicking Setup. 
+
+The setup menu item will only be active if Unity is NOT in Play Mode, and the setup hasn't already been completed. I've done my best to create a sort of setup 'happy-path', so if you try and do anything out of order or in the wrong editor mode don't worry, there will be message dialogs to guide you back on track.
 
 ### Prerequisites
 
