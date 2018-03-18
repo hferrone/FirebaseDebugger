@@ -92,9 +92,13 @@ Give an example
 * [Unity 2017](https://unity3d.com/)
 * [Google Firebase -> Realtime Database](https://firebase.google.com/docs/database/unity/start)
 
+## TODO
+
+* Refactor debug area into [TreeView](https://docs.unity3d.com/Manual/TreeViewAPI.html)
+
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests.
 
 ## Versioning
 
@@ -102,9 +106,9 @@ This project uses [SemVer](http://semver.org/) for versioning. For the versions 
 
 ## Authors
 
-* **Harrison Ferrone** - *Initial planning, design, and implementation* - [hferrone](https://github.com/hferrone)
+* **Harrison Ferrone** ([hferrone](https://github.com/hferrone)) - *Initial planning, design, and implementation* 
 
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+You can also see the complete list of [contributors](https://github.com/your/project/contributors) who participated in this project.
 
 ## License
 
@@ -112,6 +116,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 ## Acknowledgments
 
-* Extending Unity with Editor Scripting by Angelo Tadres -> 
-* Property list parser by Chris Danielson -> http://www.chrisdanielson.com/2011/05/09/using-apple-property-list-files-with-unity3d/
-* simple-firebase-unity -> https://github.com/dkrprasetya/simple-firebase-unity
+* [Extending Unity with Editor Scripting](https://www.packtpub.com/game-development/extending-unity-editor-scripting) by Angelo Tadres
+* Property list parser by [Chris Danielson](http://www.chrisdanielson.com/2011/05/09/using-apple-property-list-files-with-unity3d/)
+* [simple-firebase-unity](https://github.com/dkrprasetya/simple-firebase-unity)
