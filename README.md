@@ -6,15 +6,20 @@ This project is an Editor Window for debugging Firebase Realtime Database projec
 
 All the setup for this tool is done programmatically, so the only thing you're responsible for is going to Tools > FBDebugger and clicking Setup. 
 
+
 ![Basic Setup](https://user-images.githubusercontent.com/8218795/37569699-6214c5be-2ae6-11e8-829e-99980a40eae7.png)
+
 
 The setup menu item will only be active if Unity is NOT in Play Mode, and the setup hasn't already been completed. I've done my best to create a sort of setup 'happy-path', so if you try and do anything out of order or in the wrong editor mode don't worry, there will be message dialogs to guide you back on track.
 
+
 ![Editor Display Messages](https://user-images.githubusercontent.com/8218795/37569700-6860128e-2ae6-11e8-8c2f-42846a138c79.png)
 
-After the setup is done, you just need to go to the Inspector and assign your GoogleService-Info.plist.
+
+After the setup is done, select the Firebase Manager game object and assign your GoogleService-Info.plist in the Inspector.
 
 
+![Setting GoogleService-Info.plist](https://user-images.githubusercontent.com/8218795/37569738-e6417508-2ae6-11e8-87f2-3b411d657372.png)
 
 ### Prerequisites
 
