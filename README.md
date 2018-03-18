@@ -1,6 +1,9 @@
 # FirebaseDebugger
-The idea for this project started 
-This project is an Editor Window for debugging Firebase Realtime Database projects in Unity.
+*'Official' Copy:* 
+A user-friendly Unity Editor Window for debugging Firebase Realtime Database functionality in Unity projects.
+
+*The Story:* 
+The idea for this tool started after my third or fourth Unity + Firebase project. I'd been getting frustrated with having to write long debug logs every time I wanted to check interactions with Firebase's Realtime Database. So in short, I decided to learn about Unity Editor Extensions, which I had wanted to do for a long time, and scratch my own usability itch in the process.
 
 ## Getting Started
 
@@ -20,6 +23,9 @@ After the setup is done, select the Firebase Manager game object and assign your
 
 
 ![Setting GoogleService-Info.plist](https://user-images.githubusercontent.com/8218795/37569738-e6417508-2ae6-11e8-87f2-3b411d657372.png)
+
+
+I wanted to make this as intuitive and easy as possible, so that's really all there is to the setup.
 
 ### Prerequisites
 
