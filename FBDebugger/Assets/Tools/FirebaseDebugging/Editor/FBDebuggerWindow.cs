@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -42,6 +44,7 @@ namespace FBDebugger
 
 		// Firebase formatted string
 		private string _dataString = "No Data...";
+		private Dictionary<string, object> _dataSnapshot;
 
 		// Filtering and sorting options
 		private bool _isSortingEnabled;
@@ -56,7 +59,7 @@ namespace FBDebugger
 		private int _equalTo;
 
 		// Data mapping variables
-        private Object _destinationClass;
+		private MonoScript _destinationClass;
 
         // Serialized objects
 		private SerializedObject _serializedTarget;
@@ -182,10 +185,18 @@ namespace FBDebugger
             EditorGUILayout.LabelField("Mapping", _mainStyle);
             EditorGUILayout.LabelField("Destination Class");
 
-            _destinationClass = EditorGUILayout.ObjectField(_destinationClass, typeof(Object), true);
-            if (_destinationClass == null)
-                EditorGUILayout.HelpBox("Please drag a class script that you would like the FBDataSnapshot mapped to.", MessageType.Info);
-        }
+			_destinationClass = (MonoScript)EditorGUILayout.ObjectField(_destinationClass, typeof(MonoScript), true);
+			if (_destinationClass == null)
+				EditorGUILayout.HelpBox("Please drag a class script that you would like the FBDataSnapshot mapped to.", MessageType.Info);
+
+			if (_destinationClass != null)
+			{
+				//GenericMappable customClass = Activator.CreateInstance(_destinationClass.GetClass()) as GenericMappable;
+				GenericMappable customClass = (GenericMappable)ScriptableObject.CreateInstance(_destinationClass.GetClass());
+				customClass.Map(_dataSnapshot);
+				Editor.CreateEditor(customClass).OnInspectorGUI();
+			}
+		}
 
 		/// <summary>
 		/// Draws the Firebase query options GUI.
@@ -297,10 +308,24 @@ namespace FBDebugger
 		/// </summary>
 		/// <param name="formattedString">Formatted string passed through FBDataService event.</param>
 		/// <param name="action">Type of event from Firebase (eg Value Changed, Child Added etc).</param>
-		private void UpdateCurrentData(string formattedString, string action) 
+		private void UpdateCurrentData(Dictionary<string, object> snapshotDict, string action) 
 		{
-			_dataString = formattedString;
+			string dataString = snapshotDict != null ? ProcessData(snapshotDict) : "No endpoint found in the database...";
+			_dataString = dataString;
+			_dataSnapshot = snapshotDict;
 			Repaint();
+		}
+		#endregion
+
+		#region Utilities
+		/// <summary>
+		/// Parses snapshot dictionary into formatted string.
+		/// </summary>
+		/// <returns>Formatted data string to display in FBDebuggerWindow (Editor Window).</returns>
+		/// <param name="dict">Snapshot dictionary from Firebase.</param>
+		private string ProcessData(Dictionary<string, object> dict) 
+		{
+			return dict.Select(x => x.Key + " : " + x.Value).Aggregate((s1, s2) => s1 + "\n" + s2);
 		}
 		#endregion
     }

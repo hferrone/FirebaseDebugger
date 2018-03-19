@@ -41,7 +41,7 @@ namespace FBDebugger
 		}
 
 		// Event types and variables
-		public delegate void NewDataAvailable(string formattedString, string action);
+		public delegate void NewDataAvailable(Dictionary<string, object> snapshotDict, string action);
 		public event NewDataAvailable ValueDataChanged;
 
 		/// <summary>
@@ -90,10 +90,9 @@ namespace FBDebugger
 		private void HandleValueChange(object sender, ValueChangedEventArgs eventArgs) 
 		{
 			var snapDict = (Dictionary<string, object>)eventArgs.Snapshot.Value;
-			string dataString = snapDict != null ? ProcessData(snapDict) : "No endpoint found in the database...";
 
 			if (ValueDataChanged != null)
-				ValueDataChanged(dataString, "Value Changed");
+				ValueDataChanged(snapDict, "Value Changed");
 		}
 
 		#region Utilities
@@ -106,16 +105,6 @@ namespace FBDebugger
 		{
 			string childRef = string.Join("/", childNodes);
 			return FirebaseDatabase.DefaultInstance.RootReference.Child(childRef);
-		}
-
-		/// <summary>
-		/// Parses snapshot dictionary into formatted string.
-		/// </summary>
-		/// <returns>Formatted data string to display in FBDebuggerWindow (Editor Window).</returns>
-		/// <param name="dict">Snapshot dictionary from Firebase.</param>
-		private string ProcessData(Dictionary<string, object> dict) 
-		{
-			return dict.Select(x => x.Key + " : " + x.Value).Aggregate((s1, s2) => s1 + "\n" + s2);
 		}
 		#endregion
 	}
