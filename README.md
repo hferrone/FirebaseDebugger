@@ -1,5 +1,5 @@
 # FirebaseDebugger
-*'Official' Copy:* 
+*Official Copy:* 
 
 A user-friendly Unity Editor Window for debugging Firebase Realtime Database functionality in Unity projects.
 
@@ -13,29 +13,13 @@ Alright, let's get you up and running.
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+First off, you'll need to have Firebase integrated into your project. I'm assuming that since you're using this tool that's already the case, but [here is the general setup link](https://firebase.google.com/docs/unity/setup) and the [Realtime Database setup](https://firebase.google.com/docs/database/unity/start). 
 
-```
-Give examples
-```
+Don't forget to put your GoogleService-Info.plist file into the project, as that's how the Editor Window establishes an automatic connection with your project.
 
 ### Installing
 
-A step by step series of examples that tell you have to get a development env running
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
+You can download FirebaseDebugger from the [Unity Asset Store](https://assetstore.unity.com/) (preferred method), or you can download the whole project from the repo and drag/drop the entire Tools folder into your project.
 
 ### Setup
 
@@ -61,7 +45,7 @@ I wanted to make this as intuitive and easy as possible, so that's really all th
 
 ## Using the FBDebuggerWindow
 
-Explain how to run the automated tests for this system
+After the setup is complete, you can open the debug window in Play Mode with the F key, or through Tools > FBDebugger > Show Debugger. The editor window will display your data root automatically when you open the window, and closes itself when you exit Play Mode because all our setup code happens on Awake.
 
 ### Drilling into your data
 
