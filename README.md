@@ -48,8 +48,7 @@ I wanted to make this as intuitive and easy as possible, so that's really all th
 After the setup is complete, you can open the debug window in Play Mode with:
 
 ```
-F key
-Tools > FBDebugger > Show Debugger.
+F key - OR - Tools > FBDebugger > Show Debugger.
 ```
 
 The editor window will display your data root automatically when you open the window, and closes itself when you exit Play Mode because all our setup code happens on Awake.
