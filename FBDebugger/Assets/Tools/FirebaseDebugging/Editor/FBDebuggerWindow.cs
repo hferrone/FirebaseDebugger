@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,6 +42,7 @@ namespace FBDebugger
         // GUI styles
         private GUIStyle _mainStyle;
 		private GUIStyle _subStyle;
+		private GUIStyle _textArea;
 
 		// Firebase formatted string
 		private string _dataString = "No Data...";
@@ -129,7 +131,7 @@ namespace FBDebugger
             EditorGUILayout.LabelField("Debug Console", _mainStyle);
 
 			EditorGUI.BeginDisabledGroup(true);
-			EditorGUILayout.TextArea(_dataString, GUILayout.MaxHeight(500));
+			EditorGUILayout.TextArea(_dataString, _textArea, GUILayout.MaxHeight(500));
 			EditorGUI.EndDisabledGroup();
 
 			// Start Query/Clear button group
@@ -233,9 +235,11 @@ namespace FBDebugger
 		{
 			GUISkin mainSkin = (GUISkin)Resources.Load("Debugger_Main");
 			GUISkin subSkin = (GUISkin)Resources.Load("Debugger_Sub1");
+			GUISkin textArea = (GUISkin)Resources.Load("Debugger_TextArea");
 
 			_mainStyle = mainSkin.label;
 			_subStyle = subSkin.label;
+			_textArea = textArea.label;
 		}
 
 		/// <summary>
@@ -323,9 +327,9 @@ namespace FBDebugger
 		/// </summary>
 		/// <returns>Formatted data string to display in FBDebuggerWindow (Editor Window).</returns>
 		/// <param name="dict">Snapshot dictionary from Firebase.</param>
-		private string ProcessData(Dictionary<string, object> dict) 
+		private string ProcessData(Dictionary<string, object> dict)
 		{
-			return dict.Select(x => x.Key + " : " + x.Value).Aggregate((s1, s2) => s1 + "\n" + s2);
+			return FBDEditorUtils.DictionaryPrint(dict);
 		}
 		#endregion
     }
