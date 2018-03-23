@@ -63,6 +63,9 @@ namespace FBDebugger
 		// Data mapping variables
 		private MonoScript _destinationClass;
 
+		// Configurations
+		private FBDConfiguration _currentConfig;
+
         // Serialized objects
 		private SerializedObject _serializedTarget;
 		private SerializedProperty _serializedChildNodes;
@@ -112,6 +115,9 @@ namespace FBDebugger
 			DrawOptionsGUI();
 			GUILayout.Space(10);
 			DrawDataMappingGUI();
+			GUILayout.Space(10);
+
+			DrawSavingGUI();
 				
             EditorGUILayout.EndVertical();
 
@@ -225,6 +231,38 @@ namespace FBDebugger
 				_limitToFirst = EditorGUILayout.IntField("Limit to first", _limitToFirst);
 			}
         }
+
+		/// <summary>
+		/// Draws the configuration saving GUI.
+		///  - Allows users to create and load configuration settings (as ScriptableObjects)
+		/// </summary>
+		private void DrawSavingGUI()
+		{
+			EditorGUILayout.LabelField("Save/Load", _mainStyle);
+
+			EditorGUIUtility.labelWidth = 100;
+			_currentConfig = (FBDConfiguration)EditorGUILayout.ObjectField("Configuration", _currentConfig, typeof(FBDConfiguration), false);
+			EditorGUIUtility.labelWidth = 0;
+
+			if (_currentConfig != null)
+			{
+				Editor.CreateEditor(_currentConfig).OnInspectorGUI();
+				UpdateSerializedObjects();
+			}
+			else
+				EditorGUILayout.HelpBox("You can load any previously saved configurations.", MessageType.Info);
+
+			// Set Save button action
+			bool buttonSave = GUILayout.Button("Save current settings", GUILayout.Height(2 * EditorGUIUtility.singleLineHeight));
+			if (buttonSave)
+				FBDEditorUtils.SaveConfigurationAsset(_childNodes, _destinationClass);
+
+			// Set Reset button action
+			bool buttonReset = GUILayout.Button("Reset", GUILayout.Height(2 * EditorGUIUtility.singleLineHeight));
+			if (buttonReset)
+				HardReset();
+				
+		}
         #endregion
 
 		#region Initializations
@@ -245,11 +283,12 @@ namespace FBDebugger
 		/// <summary>
 		/// Serializes the editor window and its properties for display
 		/// </summary>
-		private void InitSerializedObjects() 
+		private void SerializedObjects() 
 		{
 			ScriptableObject target = this;
 			_serializedTarget = new SerializedObject(target);
 			_serializedChildNodes = _serializedTarget.FindProperty("_childNodes");
+			_serializedTarget.ApplyModifiedProperties();
 		}
 		#endregion
 
@@ -263,7 +302,7 @@ namespace FBDebugger
 			Debug.Log("OnEnable was called...");
 
             InitStyles();
-			InitSerializedObjects();
+			SerializedObjects();
 			SubscribeEvents();
 			FBDataService.instance.LoadData(_childNodes);
         }
@@ -322,6 +361,28 @@ namespace FBDebugger
 		#endregion
 
 		#region Utilities
+		/// <summary>
+		/// Updates serialized objects in the Editor Window.
+		/// </summary>
+		private void UpdateSerializedObjects()
+		{
+			_childNodes = _currentConfig.childNodes;
+			_destinationClass = _currentConfig.destinationClass;
+			SerializedObjects();
+		}
+
+		/// <summary>
+		/// Resets the entire Editor to initial state.
+		/// </summary>
+		private void HardReset()
+		{
+			
+			_childNodes = new string[0];
+			_destinationClass = null;
+			_currentConfig = null;
+			SerializedObjects();
+		}
+
 		/// <summary>
 		/// Parses snapshot dictionary into formatted string.
 		/// </summary>

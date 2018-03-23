@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using FBDebugger;
 
 namespace FBDebugger
@@ -17,6 +18,7 @@ namespace FBDebugger
 	/// </summary>
 	public static class FBDEditorUtils 
 	{
+		#region Editor window creation
 		/// <summary>
 		/// Create an empty GameObject with instance of FBDataService attached.
 		/// </summary>
@@ -26,36 +28,30 @@ namespace FBDebugger
 			ds.transform.position = Vector3.zero;
 			ds.AddComponent<FBDataService>();
 		}
+		#endregion
 
-		/// <summary>
-		/// Dicts the parse.
-		/// </summary>
-		/// <returns>The parse.</returns>
-		/// <param name="dictionary">Dictionary.</param>
-		/// <param name="sequenceSeparator">Sequence separator.</param>
-		public static string DictParse(Dictionary<string, object> dictionary, string sequenceSeparator)
+		#region Scriptable Object management
+
+		public static void SaveConfigurationAsset(string[] nodes, MonoScript mapClass)
 		{
-			StringBuilder sb = new StringBuilder();
+			string path = EditorUtility.SaveFilePanelInProject(
+				"New Configuration",
+				"FBDebuggerConfigurations",
+				"asset",
+				"Set the name of the new FBDConfiguration asset");
 
-			foreach (var kvp in dictionary)
-			{
-				if (kvp.Value is IDictionary)
-				{
-					sb.AppendFormat("\t{0}\t{1}", kvp.Key, ParseObjectType(kvp.Value));
-					sb.Append(sequenceSeparator);
-					sb.AppendFormat("\t{0}", DictParse(kvp.Value as Dictionary<string, object>, sequenceSeparator));
-					sb.AppendFormat("{0}\t", sequenceSeparator);
-				}
-				else
-				{
-					sb.AppendFormat("\t\t{0,-5}\t{1,-5}\t{2,5}", kvp.Key, kvp.Value, ParseObjectType(kvp.Value));
-					sb.AppendFormat("{0}\t", sequenceSeparator);
-				}
-			}
-
-			return sb.ToString(0, sb.Length - sequenceSeparator.Length);
+			if (path != "")
+				FBDConfiguration.CreateSOAsset(nodes, mapClass, path);
 		}
+		#endregion
 
+		#region Snapshot parsing
+		/// <summary>
+		/// Parses a data snapshot dictionary and returns a custom formatted string.
+		/// </summary>
+		/// <returns>A formatted string.</returns>
+		/// <param name="dictionary">Data snapshot dictionary.</param>
+		/// <param name="space">Preferred tab spacing.</param>
 		public static string DictionaryPrint(Dictionary<string,object> dictionary, string space = "\t")
 		{
 			string output = "";
@@ -63,6 +59,7 @@ namespace FBDebugger
 			foreach(KeyValuePair<string,object> entry in dictionary)
 			{
 				output += string.Format("{0}{1}", space, entry.Key);
+
 				if (entry.Value is Dictionary<string, object>)
 					output += string.Format("\t{0}\n{1}", ParseObjectType(entry.Value), DictionaryPrint((Dictionary<string, object>)entry.Value, space + "\t"));
 				else if (entry.Value is List<object>)
@@ -74,6 +71,12 @@ namespace FBDebugger
 			return output;
 		}
 
+		/// <summary>
+		/// Parses a list or array and returns a custom formatted string.
+		/// </summary>
+		/// <returns>A formatted string.</returns>
+		/// <param name="list">List or array.</param>
+		/// <param name="space">Preferred tab spacing.</param>
 		private static string ListPrint(List<object> list, string space = "")
 		{
 			string output = "";
@@ -118,5 +121,6 @@ namespace FBDebugger
 			string output = "<color=white>" + type + "</color>";
 			return output;
 		}
+		#endregion
 	}
 }
