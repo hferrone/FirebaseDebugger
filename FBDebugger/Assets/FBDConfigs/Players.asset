@@ -13,4 +13,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   childNodes:
   - players
+  - 2Rn3ajQBjxaAtoRPBKWks5xoyEy1
   destinationClass: {fileID: 11500000, guid: e710c9b86e83f47b19c62c44dfd1f99c, type: 3}

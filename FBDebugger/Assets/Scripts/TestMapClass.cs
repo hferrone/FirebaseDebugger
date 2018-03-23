@@ -5,13 +5,17 @@ using UnityEngine;
 
 public class TestMapClass : GenericMappable
 {
-	public List<string> uids = new List<string>();
+	public string email;
+	public int score;
+	public int level;
 
 	public override void Map(Dictionary<string, object> withDictionary)
 	{
-		foreach(KeyValuePair<string, object> entry in withDictionary)
+		if (withDictionary.ContainsKey("email"))
 		{
-			uids.Add(entry.Key);
+			email = withDictionary["email"].ToString();
+			score = Convert.ToInt32(withDictionary["score"]);
+			level = Convert.ToInt32(withDictionary["level"]);
 		}
 	}
 }

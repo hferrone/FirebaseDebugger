@@ -64,7 +64,7 @@ namespace FBDebugger
 		private MonoScript _destinationClass;
 
 		// Configurations
-		private FBDConfiguration _currentConfig;
+		//private FBDConfiguration _currentConfig;
 
         // Serialized objects
 		private SerializedObject _serializedTarget;
@@ -155,9 +155,7 @@ namespace FBDebugger
             bool buttonClear = GUILayout.Button("Clear", GUILayout.Height(2 * EditorGUIUtility.singleLineHeight));
             if (buttonClear)
             {
-				// Reset data string
-				_dataString = "No Data...";
-				Debug.Log("Log cleared..." + _dataString);
+				ClearData();
             }
 		                
 			// End Query/Clear button group
@@ -180,7 +178,12 @@ namespace FBDebugger
 			GUILayout.Space(5);
 
 			EditorGUILayout.LabelField("Nodes", _subStyle);
+
+			EditorGUI.BeginChangeCheck();
 			EditorGUILayout.PropertyField(_serializedChildNodes, true);
+			if (EditorGUI.EndChangeCheck())
+				ClearData();
+
 			_serializedTarget.ApplyModifiedProperties();
         }
 
@@ -199,8 +202,8 @@ namespace FBDebugger
 
 			if (_destinationClass != null)
 			{
-				//GenericMappable customClass = Activator.CreateInstance(_destinationClass.GetClass()) as GenericMappable;
 				GenericMappable customClass = (GenericMappable)ScriptableObject.CreateInstance(_destinationClass.GetClass());
+				customClass.ParseKeys(_dataSnapshot);
 				customClass.Map(_dataSnapshot);
 				Editor.CreateEditor(customClass).OnInspectorGUI();
 			}
@@ -238,30 +241,33 @@ namespace FBDebugger
 		/// </summary>
 		private void DrawSavingGUI()
 		{
-			EditorGUILayout.LabelField("Save/Load", _mainStyle);
-
-			EditorGUIUtility.labelWidth = 100;
-			_currentConfig = (FBDConfiguration)EditorGUILayout.ObjectField("Configuration", _currentConfig, typeof(FBDConfiguration), false);
-			EditorGUIUtility.labelWidth = 0;
-
-			if (_currentConfig != null)
-			{
-				Editor.CreateEditor(_currentConfig).OnInspectorGUI();
-				UpdateSerializedObjects();
-			}
-			else
-				EditorGUILayout.HelpBox("You can load any previously saved configurations.", MessageType.Info);
-
-			// Set Save button action
-			bool buttonSave = GUILayout.Button("Save current settings", GUILayout.Height(2 * EditorGUIUtility.singleLineHeight));
-			if (buttonSave)
-				FBDEditorUtils.SaveConfigurationAsset(_childNodes, _destinationClass);
+//			EditorGUILayout.LabelField("Save/Load", _mainStyle);
+//
+//			EditorGUIUtility.labelWidth = 100;
+//			_currentConfig = (FBDConfiguration)EditorGUILayout.ObjectField("Configuration", _currentConfig, typeof(FBDConfiguration), false);
+//			EditorGUIUtility.labelWidth = 0;
+//
+//			if (_currentConfig != null)
+//			{
+//				Editor.CreateEditor(_currentConfig).OnInspectorGUI();
+//				UpdateSerializedObjects();
+//			}
+//			else
+//				EditorGUILayout.HelpBox("You can load any previously saved configurations.", MessageType.Info);
+//
+//			// Set Save button action
+//			bool buttonSave = GUILayout.Button("Save current settings", GUILayout.Height(2 * EditorGUIUtility.singleLineHeight));
+//			if (buttonSave)
+//				FBDEditorUtils.SaveConfigurationAsset(_childNodes, _destinationClass);
 
 			// Set Reset button action
-			bool buttonReset = GUILayout.Button("Reset", GUILayout.Height(2 * EditorGUIUtility.singleLineHeight));
+			bool buttonReset = GUILayout.Button("Hard Reset", GUILayout.Height(2 * EditorGUIUtility.singleLineHeight));
 			if (buttonReset)
-				HardReset();
-				
+			{
+				bool reset = EditorUtility.DisplayDialog("Wait!", "Are you sure you want to reset all the editor window data?", "Go for it!", "Nope");
+				if (reset)
+					HardReset();
+			}
 		}
         #endregion
 
@@ -362,13 +368,23 @@ namespace FBDebugger
 
 		#region Utilities
 		/// <summary>
+		/// Clears the debug area data.
+		/// </summary>
+		private void ClearData()
+		{
+			// Reset data string
+			_dataString = "No Data...";
+			Debug.Log("Log cleared..." + _dataString);
+		}
+
+		/// <summary>
 		/// Updates serialized objects in the Editor Window.
 		/// </summary>
 		private void UpdateSerializedObjects()
 		{
-			_childNodes = _currentConfig.childNodes;
-			_destinationClass = _currentConfig.destinationClass;
-			SerializedObjects();
+//			_childNodes = _currentConfig.childNodes;
+//			_destinationClass = _currentConfig.destinationClass;
+//			SerializedObjects();
 		}
 
 		/// <summary>
@@ -379,8 +395,10 @@ namespace FBDebugger
 			
 			_childNodes = new string[0];
 			_destinationClass = null;
-			_currentConfig = null;
+			//_currentConfig = null;
 			SerializedObjects();
+			ClearData();
+			FBDataService.instance.LoadData(_childNodes);
 		}
 
 		/// <summary>
