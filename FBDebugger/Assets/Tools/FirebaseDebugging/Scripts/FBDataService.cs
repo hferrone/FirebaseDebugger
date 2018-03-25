@@ -14,6 +14,16 @@ namespace FBDebugger
 	///////////////////////////////<-----------Firebase Data Service----------->/////////////////////////////////////
 	/////-------------------------------------------------------------------------------------------------------/////
 
+	public enum SortOption
+	{
+		None, Child, Key, Value
+	}
+
+	public enum FilterOption
+	{
+		None, LimitFirst, LimitLast, StartAt, EndAt, EqualTo
+	}
+
 	/// <summary>
 	/// Data service class that encapsulates all functionality and interactions dealing with Google Firebase.
 	///  - Singleton => uses DontDestroyOnLoad to keep Firebase instance alive through scene changes
@@ -23,6 +33,10 @@ namespace FBDebugger
 	{
 		// Singleton instance 
 		public static FBDataService instance = null;
+
+		public string[] childNodes = new string[0];
+		public SortOption sortBy = SortOption.None;
+		public FilterOption filterBy = FilterOption.None;
 			
 		// Property list variables
 		public UnityEngine.Object plistObject;
@@ -73,9 +87,9 @@ namespace FBDebugger
 		/// Public entry point for requesting new Firebase data.
 		/// </summary>
 		/// <param name="childNodes">Array of database child nodes. If empty, reference is defaulted to root Firebase project reference.</param>
-		public void LoadData(string[] childNodes) 
+		public void LoadData() 
 		{
-			DatabaseReference constructedRef = ConstructReference(childNodes);
+			DatabaseReference constructedRef = ConstructReference();
 			constructedRef.ValueChanged += HandleValueChange;
 
 			Debug.Log("Database queried at " + constructedRef);
@@ -101,10 +115,18 @@ namespace FBDebugger
 		/// </summary>
 		/// <returns>A reference constructed from input child nodes from FBDebuggerWindow (Editor Window).</returns>
 		/// <param name="childNodes">Child nodes.</param>
-		private DatabaseReference ConstructReference(string[] childNodes) 
+		private DatabaseReference ConstructReference() 
 		{
 			string childRef = string.Join("/", childNodes);
 			return FirebaseDatabase.DefaultInstance.RootReference.Child(childRef);
+		}
+
+		public void Reset()
+		{
+			childNodes = new string[0];
+			sortBy = SortOption.None;
+			filterBy = FilterOption.None;
+			LoadData();
 		}
 		#endregion
 	}

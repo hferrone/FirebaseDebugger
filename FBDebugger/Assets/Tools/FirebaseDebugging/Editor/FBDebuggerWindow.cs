@@ -26,9 +26,6 @@ namespace FBDebugger
 		#region Public variables
         // Instance accessor
         public static FBDebuggerWindow instance;
-
-		// Firebase reference nodes
-		public string[] _childNodes = new string[0];
 		#endregion
 
 		#region Private variables
@@ -37,7 +34,7 @@ namespace FBDebugger
         private const float leftMaxWidth = 350;
         private const float rightMinWidth = 200;
         private const float rightMaxWidth = 300;
-        private const float maxHeight = 400;
+        private const float maxHeight = 300;
 
         // GUI styles
         private GUIStyle _mainStyle;
@@ -48,18 +45,6 @@ namespace FBDebugger
 		private string _dataString = "No Data...";
 		private Dictionary<string, object> _dataSnapshot;
 
-		// Filtering and sorting options
-		private bool _isSortingEnabled;
-		private bool _isFilteringEnabled;
-		private string _orderByChild;
-		private string _orderByKey;
-		private string _orderByValue;
-		private int _limitToFirst;
-		private int _limitToLast;
-		private int _startAt;
-		private int _endAt;
-		private int _equalTo;
-
 		// Data mapping variables
 		private MonoScript _destinationClass;
 
@@ -69,6 +54,8 @@ namespace FBDebugger
         // Serialized objects
 		private SerializedObject _serializedTarget;
 		private SerializedProperty _serializedChildNodes;
+		private SerializedProperty _serializedSortOption;
+		private SerializedProperty _serializedFilterOption;
 		#endregion
 
         /// <summary>
@@ -78,7 +65,7 @@ namespace FBDebugger
 		{
             instance = (FBDebuggerWindow)EditorWindow.GetWindow(typeof(FBDebuggerWindow));
             instance.titleContent = new GUIContent("FBDebugger");
-            instance.minSize = new Vector2(200, 200);
+            instance.minSize = new Vector2(800, 400);
         }
 
 		void Update()
@@ -137,7 +124,7 @@ namespace FBDebugger
             EditorGUILayout.LabelField("Debug Console", _mainStyle);
 
 			EditorGUI.BeginDisabledGroup(true);
-			EditorGUILayout.TextArea(_dataString, _textArea, GUILayout.MaxHeight(500));
+			EditorGUILayout.TextArea(_dataString, _textArea, GUILayout.MaxHeight(instance.maxSize.y - (2 * EditorGUIUtility.singleLineHeight)));
 			EditorGUI.EndDisabledGroup();
 
 			// Start Query/Clear button group
@@ -148,7 +135,7 @@ namespace FBDebugger
             if (buttonQuery)
             {
 				// Construct reference with child nodes and fetch new data
-				FBDataService.instance.LoadData(_childNodes);
+				FBDataService.instance.LoadData();
             }
 
 			// Set Clear button action
@@ -170,7 +157,7 @@ namespace FBDebugger
 		{
             EditorGUILayout.LabelField("Firebase Info", _mainStyle);
 
-			EditorGUIUtility.labelWidth = 75;
+			EditorGUIUtility.labelWidth = 70;
 			EditorGUILayout.LabelField("References", _subStyle);
 			EditorGUILayout.LabelField("Base", FBDataService.plist["DATABASE_URL"].ToString());
 			EditorGUIUtility.labelWidth = 0;
@@ -218,21 +205,22 @@ namespace FBDebugger
 		{
             EditorGUILayout.LabelField("Options", _mainStyle);
 
-			// Expanding sorting section
-			_isSortingEnabled = EditorGUILayout.Toggle("Show Sorting", _isSortingEnabled);
-			if (_isSortingEnabled == true)
-			{
-				_orderByChild = EditorGUILayout.TextField("Order by child", _orderByChild);
-				_orderByKey = EditorGUILayout.TextField("Order by key", _orderByKey);
-				_orderByValue = EditorGUILayout.TextField("Order by value", _orderByValue);
-			}
+			GUILayout.Space(5);
+			EditorGUIUtility.labelWidth = 70;
 
-			// Expanding filtering section
-			_isFilteringEnabled = EditorGUILayout.Toggle("Show Filtering", _isFilteringEnabled);
-			if (_isFilteringEnabled == true)
-			{
-				_limitToFirst = EditorGUILayout.IntField("Limit to first", _limitToFirst);
-			}
+			// Sorting section
+			EditorGUILayout.BeginHorizontal("box");
+			EditorGUILayout.PropertyField(_serializedSortOption);
+			_serializedTarget.ApplyModifiedProperties();
+			EditorGUILayout.EndVertical();
+
+			// Filtering section
+			EditorGUILayout.BeginHorizontal("box");
+			EditorGUILayout.PropertyField(_serializedFilterOption);
+			_serializedTarget.ApplyModifiedProperties();
+			EditorGUILayout.EndVertical();
+
+			EditorGUIUtility.labelWidth = 0;
         }
 
 		/// <summary>
@@ -291,9 +279,11 @@ namespace FBDebugger
 		/// </summary>
 		private void SerializedObjects() 
 		{
-			ScriptableObject target = this;
-			_serializedTarget = new SerializedObject(target);
-			_serializedChildNodes = _serializedTarget.FindProperty("_childNodes");
+			//ScriptableObject target = this;
+			_serializedTarget = new SerializedObject(FBDataService.instance);
+			_serializedChildNodes = _serializedTarget.FindProperty("childNodes");
+			_serializedSortOption = _serializedTarget.FindProperty("sortBy");
+			_serializedFilterOption = _serializedTarget.FindProperty("filterBy");
 			_serializedTarget.ApplyModifiedProperties();
 		}
 		#endregion
@@ -310,7 +300,7 @@ namespace FBDebugger
             InitStyles();
 			SerializedObjects();
 			SubscribeEvents();
-			FBDataService.instance.LoadData(_childNodes);
+			FBDataService.instance.LoadData();
         }
 
 		/// <summary>
@@ -378,6 +368,15 @@ namespace FBDebugger
 		}
 
 		/// <summary>
+		/// Validates sorting and filtering options to ensure max 1 is selected from each group.
+		/// </summary>
+		/// <param name="options">String array of option fields to validate.</param>
+		private void ValidateOptions(string[] options)
+		{
+
+		}
+
+		/// <summary>
 		/// Updates serialized objects in the Editor Window.
 		/// </summary>
 		private void UpdateSerializedObjects()
@@ -393,12 +392,9 @@ namespace FBDebugger
 		private void HardReset()
 		{
 			
-			_childNodes = new string[0];
+			FBDataService.instance.Reset();
 			_destinationClass = null;
-			//_currentConfig = null;
-			SerializedObjects();
 			ClearData();
-			FBDataService.instance.LoadData(_childNodes);
 		}
 
 		/// <summary>
