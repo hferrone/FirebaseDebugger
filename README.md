@@ -40,6 +40,14 @@ After the setup is done, select the Firebase Manager game object and assign your
 
 I wanted to make this as intuitive and easy as possible, so that's really all the setup there is.
 
+### Help
+
+If you need some tips, can't figure something out, or just want to send us some feedback about the tool, access the <i>Help</i> page by:
+
+```
+H key || Tools > FBDebugger > Help.
+```
+
 ## Using the FBDebuggerWindow
 
 After the setup is complete, you can open the debug window in Play Mode with:
@@ -48,23 +56,25 @@ After the setup is complete, you can open the debug window in Play Mode with:
 F key || Tools > FBDebugger > Show Debugger.
 ```
 
-The editor window will display your data root automatically when you open the window, and closes itself when you exit Play Mode because all our setup code happens on Awake.
+The Firebase Manager is already set up with a singleton script that handles all the Firebase functionality, so you'll don't have to worry about initializing the debugger if you switch scenes.
+
+On startup the debugger will display all data at your project root automatically, and will close itself when you exit Play Mode to keep the Firebase SDK happy and your console error-free.
+
+![screen shot 2018-03-27 at 20 04 45](https://user-images.githubusercontent.com/8218795/37986013-aa8b6ee0-31fa-11e8-8588-e5d97db4b593.png)
 
 ### Drilling into your data
 
-Explain what these tests test and why
+Getting into your data is pretty simple. Enter the key, or nested keys, into the Child Nodes array and hit Query. This will construct a Database Reference and return all its data up to single key-value pairs. 
 
-```
-Give an example
-```
+In the example screenshots below, I can access a single players data by entering my parent node <i>players</i> and a user key. 
+
+![screen shot 2018-03-27 at 20 05 30](https://user-images.githubusercontent.com/8218795/37986015-aaa621ea-31fa-11e8-8f80-76c797a67eb6.png)
 
 ### Sorting and filtering
 
-Explain what these tests test and why
+For this first release only sorting and one filtering option can be applied to a given reference. In the next releases we're hoping to expand this to incorporate multiple filtering options to mirror what Firebase supports.
 
-```
-Give an example
-```
+By default there are no options selected, but you can use the dropdowns to target specific data, and where applicable enter sorting/filtering values.
 
 ### Data snapshot mapping
 
@@ -81,6 +91,8 @@ Give an example
 
 ## TODO
 
+* Add in multiple filtering option functionality
+* Add save/load/edit settings feature using Scriptable Objects
 * Refactor debug area into [TreeView](https://docs.unity3d.com/Manual/TreeViewAPI.html)
 
 ## Contributing
@@ -104,5 +116,5 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 ## Acknowledgments
 
 * [Extending Unity with Editor Scripting](https://www.packtpub.com/game-development/extending-unity-editor-scripting) by Angelo Tadres
-* Property list parser by [Chris Danielson](http://www.chrisdanielson.com/2011/05/09/using-apple-property-list-files-with-unity3d/)
+* [Property list parser](http://www.chrisdanielson.com/2011/05/09/using-apple-property-list-files-with-unity3d/) by Chris Danielson
 * [simple-firebase-unity](https://github.com/dkrprasetya/simple-firebase-unity)
