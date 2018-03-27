@@ -41,7 +41,7 @@ namespace FBDebugger
 		private GUIStyle _subStyle;
 		private GUIStyle _textArea;
 
-		// Firebase formatted string
+		// Firebase data variables
 		private string _dataString = "No Data...";
 		private Dictionary<string, object> _dataSnapshot;
 
@@ -55,7 +55,9 @@ namespace FBDebugger
 		private SerializedObject _serializedTarget;
 		private SerializedProperty _serializedChildNodes;
 		private SerializedProperty _serializedSortOption;
+		private SerializedProperty _serializedSortValue;
 		private SerializedProperty _serializedFilterOption;
+		private SerializedProperty _serializedFilterValue;
 		#endregion
 
         /// <summary>
@@ -211,12 +213,18 @@ namespace FBDebugger
 			// Sorting section
 			EditorGUILayout.BeginHorizontal("box");
 			EditorGUILayout.PropertyField(_serializedSortOption);
+
+			EditorGUI.BeginDisabledGroup(_serializedSortOption.enumValueIndex != (int)SortOption.Child);
+			EditorGUILayout.PropertyField(_serializedSortValue);
+			EditorGUI.EndDisabledGroup();
+
 			_serializedTarget.ApplyModifiedProperties();
 			EditorGUILayout.EndVertical();
 
 			// Filtering section
 			EditorGUILayout.BeginHorizontal("box");
 			EditorGUILayout.PropertyField(_serializedFilterOption);
+			EditorGUILayout.PropertyField(_serializedFilterValue);
 			_serializedTarget.ApplyModifiedProperties();
 			EditorGUILayout.EndVertical();
 
@@ -283,7 +291,9 @@ namespace FBDebugger
 			_serializedTarget = new SerializedObject(FBDataService.instance);
 			_serializedChildNodes = _serializedTarget.FindProperty("childNodes");
 			_serializedSortOption = _serializedTarget.FindProperty("sortBy");
+			_serializedSortValue = _serializedTarget.FindProperty("sortValue");
 			_serializedFilterOption = _serializedTarget.FindProperty("filterBy");
+			_serializedFilterValue = _serializedTarget.FindProperty("filterValue");
 			_serializedTarget.ApplyModifiedProperties();
 		}
 		#endregion

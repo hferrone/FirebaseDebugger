@@ -14,15 +14,9 @@ namespace FBDebugger
 	///////////////////////////////<-----------Firebase Data Service----------->/////////////////////////////////////
 	/////-------------------------------------------------------------------------------------------------------/////
 
-	public enum SortOption
-	{
-		None, Child, Key, Value
-	}
-
-	public enum FilterOption
-	{
-		None, LimitFirst, LimitLast, StartAt, EndAt, EqualTo
-	}
+	// Enums for sorting and filtering options
+	public enum SortOption { None, Child, Key, Value }
+	public enum FilterOption { None, LimitFirst, LimitLast, StartAt, EndAt, EqualTo }
 
 	/// <summary>
 	/// Data service class that encapsulates all functionality and interactions dealing with Google Firebase.
@@ -34,9 +28,21 @@ namespace FBDebugger
 		// Singleton instance 
 		public static FBDataService instance = null;
 
+		// Reference variables
+		//[HideInInspector]
 		public string[] childNodes = new string[0];
+
+		//[HideInInspector]
 		public SortOption sortBy = SortOption.None;
+
+		//[HideInInspector]
+		public string sortValue = "";
+
+		//[HideInInspector]
 		public FilterOption filterBy = FilterOption.None;
+
+		//[HideInInspector]
+		public int filterValue = 0;
 			
 		// Property list variables
 		public UnityEngine.Object plistObject;
@@ -90,7 +96,10 @@ namespace FBDebugger
 		public void LoadData() 
 		{
 			DatabaseReference constructedRef = ConstructReference();
-			constructedRef.ValueChanged += HandleValueChange;
+//			if (sortBy != SortOption.None && sortValue != "")
+//				AddReferenceQuery(constructedRef);
+//			else
+			constructedRef.OrderByChild("isAlive").ValueChanged += HandleValueChange;
 
 			Debug.Log("Database queried at " + constructedRef);
 		}
@@ -103,7 +112,12 @@ namespace FBDebugger
 		/// <param name="eventArgs">Event argument that holds Firebase DataSnapshot.</param>
 		private void HandleValueChange(object sender, ValueChangedEventArgs eventArgs) 
 		{
-			var snapDict = (Dictionary<string, object>)eventArgs.Snapshot.Value;
+			//var snapDict = (Dictionary<string, object>)eventArgs.Snapshot.Value;
+			var snapDict = new Dictionary<string, object>();
+			foreach (var kvp in eventArgs.Snapshot.Children)
+			{
+				snapDict[kvp.Key] = kvp.Value;
+			}
 
 			if (ValueDataChanged != null)
 				ValueDataChanged(snapDict, "Value Changed");
@@ -118,14 +132,35 @@ namespace FBDebugger
 		private DatabaseReference ConstructReference() 
 		{
 			string childRef = string.Join("/", childNodes);
-			return FirebaseDatabase.DefaultInstance.RootReference.Child(childRef);
+			return FirebaseDatabase.DefaultInstance.GetReference(childRef);
+		}
+
+		private void AddReferenceQuery(DatabaseReference mainRef)
+		{
+			DatabaseReference returnRef = mainRef;
+			switch (sortBy)
+			{
+				case SortOption.Child:
+					returnRef.OrderByChild(sortValue).ValueChanged += HandleValueChange;
+					break;
+				case SortOption.Key:
+					returnRef.OrderByKey();
+					break;
+				case SortOption.Value:
+					returnRef.OrderByValue();
+					break;
+				case SortOption.None:
+					break;
+			}
 		}
 
 		public void Reset()
 		{
 			childNodes = new string[0];
 			sortBy = SortOption.None;
+			sortValue = "";
 			filterBy = FilterOption.None;
+			filterValue = 0;
 			LoadData();
 		}
 		#endregion
