@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using FBDebugger;
+using Firebase;
+using Firebase.Database;
+using Firebase.Unity.Editor;
 
 namespace FBDebugger
 {
@@ -31,7 +34,6 @@ namespace FBDebugger
 		#endregion
 
 		#region Scriptable Object management
-
 		public static void SaveConfigurationAsset(string[] nodes, MonoScript mapClass)
 		{
 			string path = EditorUtility.SaveFilePanelInProject(
@@ -58,14 +60,14 @@ namespace FBDebugger
 
 			foreach(KeyValuePair<string,object> entry in dictionary)
 			{
-				output += string.Format("{0}{1}", space, entry.Key);
+				output += string.Format("{0}{1,-15}", space, entry.Key);
 
 				if (entry.Value is Dictionary<string, object>)
-					output += string.Format("\t{0}\n{1}", ParseObjectType(entry.Value), DictionaryPrint((Dictionary<string, object>)entry.Value, space + "\t"));
+					output += string.Format("\t{0}\n{1}\n", ParseObjectType(entry.Value), DictionaryPrint((Dictionary<string, object>)entry.Value, space + "\t"));
 				else if (entry.Value is List<object>)
-					output += "\n" + ListPrint((List<object>)entry.Value, space + "  ");
+					output += string.Format("\t{0}\n{1}", ParseObjectType(entry.Value), ListPrint((List<object>)entry.Value, space + "\t"));
 				else
-					output += string.Format(" :\t{0,-5}\t{1,5}\n", entry.Value, ParseObjectType(entry.Value));
+					output += string.Format("{0,-1}\t{1,-5}\n", "", entry.Value);
 			}
 
 			return output;
@@ -77,18 +79,20 @@ namespace FBDebugger
 		/// <returns>A formatted string.</returns>
 		/// <param name="list">List or array.</param>
 		/// <param name="space">Preferred tab spacing.</param>
-		private static string ListPrint(List<object> list, string space = "")
+		private static string ListPrint(List<object> list, string space = "\t")
 		{
 			string output = "";
 
 			foreach (object entry in list)
 			{
+				output += string.Format("{0}", space);
+
 				if (entry is List<object>)
-					output += ListPrint((List<object>)entry, space + "  ");
+					output += ListPrint((List<object>)entry, space + "\t");
 				else if (entry is Dictionary<string, object>)
-					output += DictionaryPrint((Dictionary<string, object>)entry, space + "  ");
+					output += DictionaryPrint((Dictionary<string, object>)entry, space + "\t");
 				else
-					output += entry + "\n";
+					output += string.Format("{0,-5}\n", entry);
 			}
 
 			return output;
@@ -103,18 +107,8 @@ namespace FBDebugger
 		{
 			string type = "";
 
-			if (value is Int64)
-				type = "(Int)";
-			else if (value is bool)
-				type = "(Bool)";
-			else if (value is Array)
+			if (value is List<object>)
 				type = "(Array)";
-			else if (value is byte)
-				type = "(Byte)";
-			else if (value is float)
-				type = "(Float)";
-			else if (value is string)
-				type = "(String)";
 			else if (value is IDictionary)
 				type = "(Dictionary)";
 
@@ -122,5 +116,16 @@ namespace FBDebugger
 			return output;
 		}
 		#endregion
+
+		public static void NewTestData()
+		{
+			List<string> equipment = new List<string>() { "Diamond Helm", "Gold Tiara", "Ocarina"};
+			Player player1 = new Player("hello@gmail.com", "player1", 201, 112.4f, true, equipment);
+			string jsonString = JsonUtility.ToJson(player1);
+			var db = FirebaseDatabase.DefaultInstance.RootReference;
+			var key = db.Child("players").Push().Key;
+
+			db.Child("players").Child(key).SetRawJsonValueAsync(jsonString);
+		}
 	}
 }

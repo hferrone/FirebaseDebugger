@@ -36,6 +36,9 @@ namespace FBDebugger
         private const float rightMaxWidth = 300;
         private const float maxHeight = 300;
 
+		// Scroll view position
+		private Vector2 scrollPos;
+
         // GUI styles
         private GUIStyle _mainStyle;
 		private GUIStyle _subStyle;
@@ -125,9 +128,11 @@ namespace FBDebugger
 		{
             EditorGUILayout.LabelField("Debug Console", _mainStyle);
 
+			scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.MaxHeight(instance.maxSize.y - (2 * EditorGUIUtility.singleLineHeight)));
 			EditorGUI.BeginDisabledGroup(true);
-			EditorGUILayout.TextArea(_dataString, _textArea, GUILayout.MaxHeight(instance.maxSize.y - (2 * EditorGUIUtility.singleLineHeight)));
+			EditorGUILayout.TextArea(_dataString, _textArea);
 			EditorGUI.EndDisabledGroup();
+			EditorGUILayout.EndScrollView();
 
 			// Start Query/Clear button group
             EditorGUILayout.BeginHorizontal();
@@ -166,12 +171,15 @@ namespace FBDebugger
 
 			GUILayout.Space(5);
 
-			EditorGUILayout.LabelField("Nodes", _subStyle);
+			EditorGUILayout.LabelField("Child Nodes", _subStyle);
 
 			EditorGUI.BeginChangeCheck();
-			EditorGUILayout.PropertyField(_serializedChildNodes, true);
+			EditorGUIUtility.labelWidth = 90;
+			ShowArrayGUI(_serializedChildNodes);
 			if (EditorGUI.EndChangeCheck())
 				ClearData();
+
+			EditorGUIUtility.labelWidth = 0;
 
 			_serializedTarget.ApplyModifiedProperties();
         }
@@ -287,13 +295,14 @@ namespace FBDebugger
 		/// </summary>
 		private void SerializedObjects() 
 		{
-			//ScriptableObject target = this;
 			_serializedTarget = new SerializedObject(FBDataService.instance);
+
 			_serializedChildNodes = _serializedTarget.FindProperty("childNodes");
 			_serializedSortOption = _serializedTarget.FindProperty("sortBy");
 			_serializedSortValue = _serializedTarget.FindProperty("sortValue");
 			_serializedFilterOption = _serializedTarget.FindProperty("filterBy");
 			_serializedFilterValue = _serializedTarget.FindProperty("filterValue");
+
 			_serializedTarget.ApplyModifiedProperties();
 		}
 		#endregion
@@ -415,6 +424,20 @@ namespace FBDebugger
 		private string ProcessData(Dictionary<string, object> dict)
 		{
 			return FBDEditorUtils.DictionaryPrint(dict);
+		}
+
+
+		void ShowArrayGUI (SerializedProperty property) {
+			SerializedProperty arraySizeProp = property.FindPropertyRelative("Array.size");
+			EditorGUILayout.PropertyField(arraySizeProp);
+
+			EditorGUI.indentLevel ++;
+
+			for (int i = 0; i < arraySizeProp.intValue; i++) {
+				EditorGUILayout.PropertyField(property.GetArrayElementAtIndex(i));
+			}
+
+			EditorGUI.indentLevel --;
 		}
 		#endregion
     }

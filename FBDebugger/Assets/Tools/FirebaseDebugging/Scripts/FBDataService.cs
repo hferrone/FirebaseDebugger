@@ -29,19 +29,19 @@ namespace FBDebugger
 		public static FBDataService instance = null;
 
 		// Reference variables
-		//[HideInInspector]
+		[HideInInspector]
 		public string[] childNodes = new string[0];
 
-		//[HideInInspector]
+		[HideInInspector]
 		public SortOption sortBy = SortOption.None;
 
-		//[HideInInspector]
+		[HideInInspector]
 		public string sortValue = "";
 
-		//[HideInInspector]
+		[HideInInspector]
 		public FilterOption filterBy = FilterOption.None;
 
-		//[HideInInspector]
+		[HideInInspector]
 		public int filterValue = 0;
 			
 		// Property list variables
@@ -84,7 +84,7 @@ namespace FBDebugger
 		/// Responsible for all Firebase setup.
 		/// Not accessible from other scripts since it should only happen on Awake.
 		/// </summary>
-		private void InitializeFirebase() 
+		public void InitializeFirebase() 
 		{
 			FirebaseApp.DefaultInstance.SetEditorDatabaseUrl(plist[Constants.PlistKeys.databaseURL].ToString());
 		}
@@ -112,12 +112,10 @@ namespace FBDebugger
 		/// <param name="eventArgs">Event argument that holds Firebase DataSnapshot.</param>
 		private void HandleValueChange(object sender, ValueChangedEventArgs eventArgs) 
 		{
-			//var snapDict = (Dictionary<string, object>)eventArgs.Snapshot.Value;
+			// Map to new dictionary so sorting/filtering order is not lost
 			var snapDict = new Dictionary<string, object>();
 			foreach (var kvp in eventArgs.Snapshot.Children)
-			{
 				snapDict[kvp.Key] = kvp.Value;
-			}
 
 			if (ValueDataChanged != null)
 				ValueDataChanged(snapDict, "Value Changed");

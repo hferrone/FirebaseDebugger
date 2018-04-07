@@ -38,6 +38,13 @@ namespace FBDebugger
 			FBDEditorUtils.NewManagerInstance();
 		}
 
+		[MenuItem("Tools/FBDebugger/TestData")]
+		public static void SetupTestData()
+		{
+			for (int i = 0; i < 5; i++)
+				FBDEditorUtils.NewTestData();
+		}
+
         /// <summary>
 		/// Shows the editor window.
 		///  - Works with F keyboard shortcut

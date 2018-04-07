@@ -140,6 +140,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d394820c7c1e74141a98dc525858bb3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  childNodes: []
+  sortBy: 0
+  sortValue: 
+  filterBy: 0
+  filterValue: 0
   plistObject: {fileID: 102900000, guid: 9443ffd1972dd41d9815f263d07560d4, type: 3}
 --- !u!4 &644190617
 Transform:
