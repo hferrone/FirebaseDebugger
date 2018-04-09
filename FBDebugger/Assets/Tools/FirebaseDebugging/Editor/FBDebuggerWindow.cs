@@ -23,21 +23,19 @@ namespace FBDebugger
 	/// </summary>
     public class FBDebuggerWindow : EditorWindow 
 	{
-		#region Public variables
         // Instance accessor
         public static FBDebuggerWindow instance;
-		#endregion
 
 		#region Private variables
         // Window size constants
         private const float leftMinWidth = 300;
         private const float leftMaxWidth = 350;
-        private const float rightMinWidth = 200;
         private const float rightMaxWidth = 300;
         private const float maxHeight = 300;
 
-		// Scroll view position
-		private Vector2 scrollPos;
+		// Scroll view positions
+		private Vector2 debugScrollPos;
+		private Vector2 infoScrollPos;
 
         // GUI styles
         private GUIStyle _mainStyle;
@@ -69,8 +67,8 @@ namespace FBDebugger
         public static void ShowDebugger() 
 		{
             instance = (FBDebuggerWindow)EditorWindow.GetWindow(typeof(FBDebuggerWindow));
-            instance.titleContent = new GUIContent("FBDebugger");
-            instance.minSize = new Vector2(800, 400);
+            instance.titleContent = new GUIContent("FirebaseDebugger");
+            instance.minSize = new Vector2(800, 390);
         }
 
 		void Update()
@@ -100,7 +98,8 @@ namespace FBDebugger
             EditorGUILayout.EndVertical();
 
             // Options and mapping area
-            EditorGUILayout.BeginVertical("box", GUILayout.MinWidth(rightMinWidth), GUILayout.MaxWidth(rightMaxWidth));
+			EditorGUILayout.BeginVertical("box", GUILayout.MaxWidth(rightMaxWidth));
+			infoScrollPos = EditorGUILayout.BeginScrollView(infoScrollPos, GUILayout.MaxHeight(instance.maxSize.y - (2 * EditorGUIUtility.singleLineHeight)));
             DrawFirebaseInfoGUI();
             GUILayout.Space(10);
 
@@ -109,7 +108,11 @@ namespace FBDebugger
 			DrawDataMappingGUI();
 			GUILayout.Space(10);
 
+			EditorGUILayout.EndScrollView();
+
+			EditorGUILayout.BeginHorizontal();
 			DrawSavingGUI();
+			EditorGUILayout.EndVertical();
 				
             EditorGUILayout.EndVertical();
 
@@ -128,7 +131,7 @@ namespace FBDebugger
 		{
             EditorGUILayout.LabelField("Debug Console", _mainStyle);
 
-			scrollPos = EditorGUILayout.BeginScrollView(scrollPos, GUILayout.MaxHeight(instance.maxSize.y - (2 * EditorGUIUtility.singleLineHeight)));
+			debugScrollPos = EditorGUILayout.BeginScrollView(debugScrollPos, GUILayout.MaxHeight(instance.maxSize.y - (2 * EditorGUIUtility.singleLineHeight)));
 			EditorGUI.BeginDisabledGroup(true);
 			EditorGUILayout.TextArea(_dataString, _textArea);
 			EditorGUI.EndDisabledGroup();
@@ -144,13 +147,6 @@ namespace FBDebugger
 				// Construct reference with child nodes and fetch new data
 				FBDataService.instance.LoadData();
             }
-
-			// Set Clear button action
-            bool buttonClear = GUILayout.Button("Clear", GUILayout.Height(2 * EditorGUIUtility.singleLineHeight));
-            if (buttonClear)
-            {
-				ClearData();
-            }
 		                
 			// End Query/Clear button group
             EditorGUILayout.EndHorizontal();
@@ -165,8 +161,8 @@ namespace FBDebugger
             EditorGUILayout.LabelField("Firebase Info", _mainStyle);
 
 			EditorGUIUtility.labelWidth = 70;
-			EditorGUILayout.LabelField("References", _subStyle);
-			EditorGUILayout.LabelField("Base", FBDataService.plist["DATABASE_URL"].ToString());
+			EditorGUILayout.LabelField("Base", _subStyle);
+			EditorGUILayout.LabelField(FBDataService.plist["DATABASE_URL"].ToString());
 			EditorGUIUtility.labelWidth = 0;
 
 			GUILayout.Space(5);
@@ -265,12 +261,21 @@ namespace FBDebugger
 //				FBDEditorUtils.SaveConfigurationAsset(_childNodes, _destinationClass);
 
 			// Set Reset button action
-			bool buttonReset = GUILayout.Button("Hard Reset", GUILayout.Height(2 * EditorGUIUtility.singleLineHeight));
+			bool buttonReset = GUILayout.Button("Hard Reset", GUILayout.Height(2 * EditorGUIUtility.singleLineHeight), GUILayout.Width(200));
 			if (buttonReset)
 			{
 				bool reset = EditorUtility.DisplayDialog("Wait!", "Are you sure you want to reset all the editor window data?", "Go for it!", "Nope");
 				if (reset)
 					HardReset();
+			}
+
+			// Set Help button action
+			bool buttonHelp = GUILayout.Button("Help", GUILayout.Height(2 * EditorGUIUtility.singleLineHeight));
+			if (buttonHelp)
+			{
+				bool github = EditorUtility.DisplayDialog("Need Some Help?", "All the information about this tool can be found on the project GitHub page.\n\nIf you want to get in touch or send us feedback, shoot an email to paradigmshiftdev@gmail.com.\n", "Go to GitHub", "Back");
+				if (github)
+					Application.OpenURL("https://github.com/hferrone/FirebaseDebugger");
 			}
 		}
         #endregion
@@ -387,25 +392,6 @@ namespace FBDebugger
 		}
 
 		/// <summary>
-		/// Validates sorting and filtering options to ensure max 1 is selected from each group.
-		/// </summary>
-		/// <param name="options">String array of option fields to validate.</param>
-		private void ValidateOptions(string[] options)
-		{
-
-		}
-
-		/// <summary>
-		/// Updates serialized objects in the Editor Window.
-		/// </summary>
-		private void UpdateSerializedObjects()
-		{
-//			_childNodes = _currentConfig.childNodes;
-//			_destinationClass = _currentConfig.destinationClass;
-//			SerializedObjects();
-		}
-
-		/// <summary>
 		/// Resets the entire Editor to initial state.
 		/// </summary>
 		private void HardReset()
@@ -425,9 +411,9 @@ namespace FBDebugger
 		{
 			return FBDEditorUtils.DictionaryPrint(dict);
 		}
-
-
-		void ShowArrayGUI (SerializedProperty property) {
+			
+		void ShowArrayGUI (SerializedProperty property) 
+		{
 			SerializedProperty arraySizeProp = property.FindPropertyRelative("Array.size");
 			EditorGUILayout.PropertyField(arraySizeProp);
 

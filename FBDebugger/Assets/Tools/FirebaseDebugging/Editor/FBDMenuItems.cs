@@ -63,18 +63,6 @@ namespace FBDebugger
 			else
 				FBDebuggerWindow.ShowDebugger();
         }
-
-        /// <summary>
-        /// Shows the help window.
-		///  - Works with H keyboard shortcut
-		///  - Active depending on ValidateHelp()
-        /// </summary>
-        [MenuItem("Tools/FBDebugger/Help _h")]
-        public static void ShowHelp() 
-		{
-			//TODO: Implement help page
-        }
-
 		#endregion 
 
 		#region Menu validation

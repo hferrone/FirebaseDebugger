@@ -85,7 +85,7 @@ namespace FBDebugger
 
 			foreach (object entry in list)
 			{
-				output += string.Format("{0}", space);
+				output += string.Format("{0}\t", space);
 
 				if (entry is List<object>)
 					output += ListPrint((List<object>)entry, space + "\t");

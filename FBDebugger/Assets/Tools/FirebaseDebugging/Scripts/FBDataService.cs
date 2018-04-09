@@ -15,8 +15,8 @@ namespace FBDebugger
 	/////-------------------------------------------------------------------------------------------------------/////
 
 	// Enums for sorting and filtering options
-	public enum SortOption { None, Child, Key, Value }
-	public enum FilterOption { None, LimitFirst, LimitLast, StartAt, EndAt, EqualTo }
+	public enum SortOption { None, Child, Key, Value, Priority }
+	public enum FilterOption { None, LimitFirst, LimitLast }
 
 	/// <summary>
 	/// Data service class that encapsulates all functionality and interactions dealing with Google Firebase.
@@ -95,13 +95,7 @@ namespace FBDebugger
 		/// <param name="childNodes">Array of database child nodes. If empty, reference is defaulted to root Firebase project reference.</param>
 		public void LoadData() 
 		{
-			DatabaseReference constructedRef = ConstructReference();
-//			if (sortBy != SortOption.None && sortValue != "")
-//				AddReferenceQuery(constructedRef);
-//			else
-			constructedRef.OrderByChild("isAlive").ValueChanged += HandleValueChange;
-
-			Debug.Log("Database queried at " + constructedRef);
+			ConstructReference();
 		}
 
 		/// <summary>
@@ -127,29 +121,59 @@ namespace FBDebugger
 		/// </summary>
 		/// <returns>A reference constructed from input child nodes from FBDebuggerWindow (Editor Window).</returns>
 		/// <param name="childNodes">Child nodes.</param>
-		private DatabaseReference ConstructReference() 
+		private void ConstructReference() 
 		{
 			string childRef = string.Join("/", childNodes);
-			return FirebaseDatabase.DefaultInstance.GetReference(childRef);
+			DatabaseReference mainRef = FirebaseDatabase.DefaultInstance.RootReference.Child(childRef);
+			Query sortQuery = AddReferenceQuery(mainRef);
+			Query finalQuery = AddReferenceFilter(sortQuery);
+			finalQuery.ValueChanged += HandleValueChange;
 		}
 
-		private void AddReferenceQuery(DatabaseReference mainRef)
+		private Query AddReferenceQuery(DatabaseReference mainRef)
 		{
-			DatabaseReference returnRef = mainRef;
+			Query newQuery = mainRef;
+
 			switch (sortBy)
 			{
 				case SortOption.Child:
-					returnRef.OrderByChild(sortValue).ValueChanged += HandleValueChange;
+					newQuery = mainRef.OrderByChild(sortValue);
 					break;
 				case SortOption.Key:
-					returnRef.OrderByKey();
+					newQuery = mainRef.OrderByKey();
 					break;
 				case SortOption.Value:
-					returnRef.OrderByValue();
+					newQuery = mainRef.OrderByValue();
+					break;
+				case SortOption.Priority:
+					newQuery = mainRef.OrderByPriority();
 					break;
 				case SortOption.None:
+				default:
 					break;
 			}
+
+			return newQuery;
+		}
+
+		private Query AddReferenceFilter(Query mainRef)
+		{
+			Query newQuery = mainRef;
+
+			switch (filterBy)
+			{
+				case FilterOption.LimitFirst:
+					newQuery = mainRef.LimitToFirst(filterValue);
+					break;
+				case FilterOption.LimitLast:
+					newQuery = mainRef.LimitToLast(filterValue);
+					break;
+				case FilterOption.None:
+				default:
+					break;
+			}
+
+			return newQuery;
 		}
 
 		public void Reset()
