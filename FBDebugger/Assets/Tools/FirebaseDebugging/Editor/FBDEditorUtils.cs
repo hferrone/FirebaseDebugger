@@ -116,16 +116,5 @@ namespace FBDebugger
 			return output;
 		}
 		#endregion
-
-		public static void NewTestData()
-		{
-			List<string> equipment = new List<string>() { "Diamond Helm", "Gold Tiara", "Ocarina"};
-			Player player1 = new Player("hello@gmail.com", "player1", 201, 112.4f, true, equipment);
-			string jsonString = JsonUtility.ToJson(player1);
-			var db = FirebaseDatabase.DefaultInstance.RootReference;
-			var key = db.Child("players").Push().Key;
-
-			db.Child("players").Child(key).SetRawJsonValueAsync(jsonString);
-		}
 	}
 }

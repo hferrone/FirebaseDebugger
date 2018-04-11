@@ -24,5 +24,11 @@ namespace FBDebugger
 		{
 			public const string ds = "Firebase Manager";
 		}
+
+		// Editor Window size constraints
+		public struct Window 
+		{
+			public const float rightMaxWidth = 300;
+		}
 	}
 }

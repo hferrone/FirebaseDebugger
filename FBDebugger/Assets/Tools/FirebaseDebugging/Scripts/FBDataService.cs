@@ -16,7 +16,7 @@ namespace FBDebugger
 
 	// Enums for sorting and filtering options
 	public enum SortOption { None, Child, Key, Value, Priority }
-	public enum FilterOption { None, LimitFirst, LimitLast }
+	public enum FilterOption { None, LimitToFirst, LimitToLast }
 
 	/// <summary>
 	/// Data service class that encapsulates all functionality and interactions dealing with Google Firebase.
@@ -127,6 +127,7 @@ namespace FBDebugger
 			DatabaseReference mainRef = FirebaseDatabase.DefaultInstance.RootReference.Child(childRef);
 			Query sortQuery = AddReferenceQuery(mainRef);
 			Query finalQuery = AddReferenceFilter(sortQuery);
+
 			finalQuery.ValueChanged += HandleValueChange;
 		}
 
@@ -162,10 +163,10 @@ namespace FBDebugger
 
 			switch (filterBy)
 			{
-				case FilterOption.LimitFirst:
+				case FilterOption.LimitToFirst:
 					newQuery = mainRef.LimitToFirst(filterValue);
 					break;
-				case FilterOption.LimitLast:
+				case FilterOption.LimitToLast:
 					newQuery = mainRef.LimitToLast(filterValue);
 					break;
 				case FilterOption.None:

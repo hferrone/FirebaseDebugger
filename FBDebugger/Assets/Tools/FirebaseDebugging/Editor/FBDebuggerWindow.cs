@@ -27,12 +27,6 @@ namespace FBDebugger
         public static FBDebuggerWindow instance;
 
 		#region Private variables
-        // Window size constants
-        private const float leftMinWidth = 300;
-        private const float leftMaxWidth = 350;
-        private const float rightMaxWidth = 300;
-        private const float maxHeight = 300;
-
 		// Scroll view positions
 		private Vector2 debugScrollPos;
 		private Vector2 infoScrollPos;
@@ -67,7 +61,7 @@ namespace FBDebugger
         public static void ShowDebugger() 
 		{
             instance = (FBDebuggerWindow)EditorWindow.GetWindow(typeof(FBDebuggerWindow));
-            instance.titleContent = new GUIContent("FirebaseDebugger");
+            instance.titleContent = new GUIContent("FBDebugger");
             instance.minSize = new Vector2(800, 390);
         }
 
@@ -97,12 +91,15 @@ namespace FBDebugger
             DrawDebugGUI();
             EditorGUILayout.EndVertical();
 
-            // Options and mapping area
-			EditorGUILayout.BeginVertical("box", GUILayout.MaxWidth(rightMaxWidth));
+            // Scroll view for entire right-hand side of editor window
+			EditorGUILayout.BeginVertical("box", GUILayout.MaxWidth(Constants.Window.rightMaxWidth));
 			infoScrollPos = EditorGUILayout.BeginScrollView(infoScrollPos, GUILayout.MaxHeight(instance.maxSize.y - (2 * EditorGUIUtility.singleLineHeight)));
+
+			// Firebase info area
             DrawFirebaseInfoGUI();
             GUILayout.Space(10);
 
+			// Sorting/filtering area
 			DrawOptionsGUI();
 			GUILayout.Space(10);
 			DrawDataMappingGUI();
@@ -110,6 +107,7 @@ namespace FBDebugger
 
 			EditorGUILayout.EndScrollView();
 
+			// Saving/reset/help area
 			EditorGUILayout.BeginHorizontal();
 			DrawSavingGUI();
 			EditorGUILayout.EndVertical();
@@ -137,7 +135,7 @@ namespace FBDebugger
 			EditorGUI.EndDisabledGroup();
 			EditorGUILayout.EndScrollView();
 
-			// Start Query/Clear button group
+			// Start Query button group
             EditorGUILayout.BeginHorizontal();
 
 			// Set Query button action
@@ -195,10 +193,16 @@ namespace FBDebugger
 
 			if (_destinationClass != null)
 			{
-				GenericMappable customClass = (GenericMappable)ScriptableObject.CreateInstance(_destinationClass.GetClass());
-				customClass.ParseKeys(_dataSnapshot);
-				customClass.Map(_dataSnapshot);
-				Editor.CreateEditor(customClass).OnInspectorGUI();
+				Type classType = _destinationClass.GetClass();
+				if (classType.IsSubclassOf(typeof(GenericMappable)))
+				{
+					GenericMappable customClass = (GenericMappable)ScriptableObject.CreateInstance(_destinationClass.GetClass());
+					customClass.ParseKeys(_dataSnapshot);
+					customClass.Map(_dataSnapshot);
+					Editor.CreateEditor(customClass).OnInspectorGUI();
+				}
+				else
+					EditorGUILayout.HelpBox("Please make sure that your destination class inherits from GenericMappable and implements the Map() function", MessageType.Warning);
 			}
 		}
 
@@ -216,10 +220,14 @@ namespace FBDebugger
 
 			// Sorting section
 			EditorGUILayout.BeginHorizontal("box");
-			EditorGUILayout.PropertyField(_serializedSortOption);
+			EditorGUILayout.PropertyField(_serializedSortOption, GUILayout.Width(155));
+			GUILayout.Space(10);
 
 			EditorGUI.BeginDisabledGroup(_serializedSortOption.enumValueIndex != (int)SortOption.Child);
-			EditorGUILayout.PropertyField(_serializedSortValue);
+			if (_serializedSortOption.enumValueIndex != (int)SortOption.Child)
+				_serializedSortValue.stringValue = "0";
+
+			EditorGUILayout.PropertyField(_serializedSortValue, GUIContent.none);
 			EditorGUI.EndDisabledGroup();
 
 			_serializedTarget.ApplyModifiedProperties();
@@ -227,8 +235,16 @@ namespace FBDebugger
 
 			// Filtering section
 			EditorGUILayout.BeginHorizontal("box");
-			EditorGUILayout.PropertyField(_serializedFilterOption);
-			EditorGUILayout.PropertyField(_serializedFilterValue);
+			EditorGUILayout.PropertyField(_serializedFilterOption, GUILayout.Width(155));
+			GUILayout.Space(10);
+
+			EditorGUI.BeginDisabledGroup(_serializedFilterOption.enumValueIndex == (int)FilterOption.None);
+			if (_serializedFilterOption.enumValueIndex == (int)FilterOption.None)
+				_serializedFilterValue.intValue = 0;
+
+			EditorGUILayout.PropertyField(_serializedFilterValue, GUIContent.none);
+			EditorGUI.EndDisabledGroup();
+
 			_serializedTarget.ApplyModifiedProperties();
 			EditorGUILayout.EndVertical();
 
@@ -412,6 +428,10 @@ namespace FBDebugger
 			return FBDEditorUtils.DictionaryPrint(dict);
 		}
 			
+		/// <summary>
+		/// Displays serialized array children to mimic editor array.
+		/// </summary>
+		/// <param name="property">Serialized property.</param>
 		void ShowArrayGUI (SerializedProperty property) 
 		{
 			SerializedProperty arraySizeProp = property.FindPropertyRelative("Array.size");
