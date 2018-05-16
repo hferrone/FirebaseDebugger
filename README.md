@@ -17,7 +17,7 @@ If you haven't already done this, here is a link to the general Unity [setup](ht
 
 ### Installing
 
-You can download FirebaseDebugger from the [Unity Asset Store](https://assetstore.unity.com/) (preferred method), or you can download the whole project from the repo and drag/drop the entire Tools folder into your project.
+You can download <b>FirebaseDebugger</b> from the [Unity Asset Store](https://assetstore.unity.com/) (preferred method), or you can download the whole project from the repo and drag/drop the entire Tools folder into your project.
 
 ### Setup
 
@@ -37,7 +37,7 @@ I wanted to make this as intuitive and easy as possible, so that's really all th
 
 ### Help
 
-If you need some tips, can't figure something out, or just want to send us some feedback about the tool, just use the big <i>Help</i> button in the bottom right corner of the Editor Window.
+If you need some tips, can't figure something out, or just want to send us some feedback about the tool, just use the big <b>Help</b> button in the bottom right corner of the Editor Window.
 
 ## Using the FBDebuggerWindow
 
