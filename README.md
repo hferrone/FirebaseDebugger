@@ -20,10 +20,11 @@ You can download FirebaseDebugger from the [Unity Asset Store](https://assetstor
 
 ### Setup
 
-Almost all of the setup for this tool is done programmatically, so the only thing you're responsible for is going to Tools > FBDebugger and clicking Setup, and assigning your <i>GoogleService-Info.plist</i> to the Firebase Manager GameObject in the Inspector. 
-
+Almost all of the setup for this tool is done programmatically, so the only thing you're responsible for is going to Tools > FBDebugger and clicking Setup...
 
 ![Basic Setup](https://user-images.githubusercontent.com/8218795/37569699-6214c5be-2ae6-11e8-829e-99980a40eae7.png)
+
+...and assigning your <i>GoogleService-Info.plist</i> to the Firebase Manager GameObject in the Inspector. 
 
 ![Setting GoogleService-Info.plist](https://user-images.githubusercontent.com/8218795/37569738-e6417508-2ae6-11e8-87f2-3b411d657372.png)
 
@@ -37,8 +38,6 @@ I wanted to make this as intuitive and easy as possible, so that's really all th
 ### Help
 
 If you need some tips, can't figure something out, or just want to send us some feedback about the tool, just use the big <i>Help</i> button in the bottom right corner of the Editor Window.
-
-![help](https://user-images.githubusercontent.com/8218795/40130651-fdb7e1c0-5937-11e8-9704-6e6ecd74b9fb.png)
 
 ## Using the FBDebuggerWindow
 
