@@ -12,6 +12,7 @@ Alright, let's get up and running.
 
 * <b>FirebaseDatabase.unitypackage</b> from the <b>Firebase SDK</b>
 * <b>GoogleService-Info.plist</b> file somewhere in the project
+* A working internet connection
 
 If you haven't already done this, here is a link to the general Unity [setup](https://firebase.google.com/docs/unity/setup) and the Realtime Database [instructions](https://firebase.google.com/docs/database/unity/start). 
 
