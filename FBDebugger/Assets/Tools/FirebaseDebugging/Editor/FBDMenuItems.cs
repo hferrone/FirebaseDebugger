@@ -47,12 +47,14 @@ namespace FBDebugger
         [MenuItem("Tools/FBDebugger/Show Debugger _f")]
         public static void ShowDebugger() 
 		{     
-			if (Application.isPlaying && !isSetupComplete)
-				EditorUtility.DisplayDialog("FBDebugger", "You haven't completed the initial setup. Exit Play Mode in the editor and go to Tools > FBDebugger > Setup.", "Ok");
+			if (Application.internetReachability == NetworkReachability.NotReachable)
+				EditorUtility.DisplayDialog("Firebase Debugger", "You'll need to be connected to the internet for this tool to work.", "Ok");
+			else if (Application.isPlaying && !isSetupComplete)
+				EditorUtility.DisplayDialog("Firebase Debugger", "You haven't completed the initial setup. Exit Play Mode in the editor and go to Tools > FBDebugger > Setup.", "Ok");
 			else if (!Application.isPlaying && !isSetupComplete)
-				EditorUtility.DisplayDialog("FBDebugger", "You haven't set up the debugger yet. Go to Tools > FBDebugger > Setup.", "Ok");
+				EditorUtility.DisplayDialog("Firebase Debugger", "You haven't set up the debugger yet. Go to Tools > FBDebugger > Setup.", "Ok");
 			else if (!Application.isPlaying && isSetupComplete)
-				EditorUtility.DisplayDialog("FBDebugger", "You need to be in Play mode to use the FBDebugger editor", "Ok");
+				EditorUtility.DisplayDialog("Firebase Debugger", "You need to be in Play mode to use the FBDebugger editor", "Ok");
 			else
 				FBDebuggerWindow.ShowDebugger();
         }
@@ -73,6 +75,13 @@ namespace FBDebugger
 				return false;
 		}
 		#endregion
+
+//		[MenuItem("Tools/FBDebugger/TestData")]
+//		public static void SetupTestData() 
+//		{
+//			for (int i = 0; i < 5; i++)
+//				FBDEditorUtils.NewTestData();
+//		}
     }
 
 }

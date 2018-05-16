@@ -157,13 +157,14 @@ namespace FBDebugger
         private void DrawFirebaseInfoGUI() 
 		{
             EditorGUILayout.LabelField("Firebase Info", _mainStyle);
+			GUILayout.Space(5);
 
-			EditorGUIUtility.labelWidth = 70;
-			EditorGUILayout.LabelField("Base", _subStyle);
+			EditorGUIUtility.labelWidth = 60;
 			EditorGUILayout.LabelField(FBDataService.plist["DATABASE_URL"].ToString());
 			EditorGUIUtility.labelWidth = 0;
 
 			GUILayout.Space(5);
+			EditorGUILayout.BeginVertical("box");
 
 			EditorGUILayout.LabelField("Child Nodes", _subStyle);
 
@@ -175,6 +176,8 @@ namespace FBDebugger
 
 			EditorGUIUtility.labelWidth = 0;
 
+			EditorGUILayout.EndVertical();
+
 			_serializedTarget.ApplyModifiedProperties();
         }
 
@@ -185,7 +188,12 @@ namespace FBDebugger
         private void DrawDataMappingGUI() 
 		{
             EditorGUILayout.LabelField("Mapping", _mainStyle);
-            EditorGUILayout.LabelField("Destination Class");
+
+			GUILayout.Space(5);
+			EditorGUILayout.BeginVertical("box");
+
+			EditorGUILayout.LabelField("Destination Class", _subStyle);
+			GUILayout.Space(5);
 
 			_destinationClass = (MonoScript)EditorGUILayout.ObjectField(_destinationClass, typeof(MonoScript), true);
 			if (_destinationClass == null)
@@ -204,6 +212,8 @@ namespace FBDebugger
 				else
 					EditorGUILayout.HelpBox("Please make sure that your destination class inherits from GenericMappable and implements the Map() function", MessageType.Warning);
 			}
+
+			EditorGUILayout.EndVertical();
 		}
 
 		/// <summary>
@@ -335,7 +345,7 @@ namespace FBDebugger
 		/// </summary>
         private void OnEnable() 
 		{
-			Debug.Log("OnEnable was called...");
+			//Debug.Log("OnEnable was called...");
 
             InitStyles();
 			SerializedObjects();
@@ -349,7 +359,7 @@ namespace FBDebugger
 		/// </summary>
         private void OnDisable() 
 		{
-			Debug.Log("OnDisable was called...");
+			//Debug.Log("OnDisable was called...");
 			UnsubscribeEvents();
         }
 
@@ -359,7 +369,7 @@ namespace FBDebugger
 		/// </summary>
         private void OnDestroy() 
 		{
-            Debug.Log("OnDestroy was called...");
+            //Debug.Log("OnDestroy was called...");
 			UnsubscribeEvents();
         }
         #endregion
@@ -404,7 +414,7 @@ namespace FBDebugger
 		{
 			// Reset data string
 			_dataString = "No Data...";
-			Debug.Log("Log cleared..." + _dataString);
+			//Debug.Log("Log cleared..." + _dataString);
 		}
 
 		/// <summary>

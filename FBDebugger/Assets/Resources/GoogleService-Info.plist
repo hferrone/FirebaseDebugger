@@ -7,21 +7,21 @@
 	<key>AD_UNIT_ID_FOR_INTERSTITIAL_TEST</key>
 	<string>ca-app-pub-3940256099942544/4411468910</string>
 	<key>CLIENT_ID</key>
-	<string>402768865765-p8r99d8sual0a6sj7td442u7dsltmv17.apps.googleusercontent.com</string>
+	<string>49828814435-7jikuglml3dtf04va4vedcluk1cjrq8d.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.402768865765-p8r99d8sual0a6sj7td442u7dsltmv17</string>
+	<string>com.googleusercontent.apps.49828814435-7jikuglml3dtf04va4vedcluk1cjrq8d</string>
 	<key>API_KEY</key>
-	<string>AIzaSyAD1YS5R4U5HZYAH-pviB6ntJCimJFpwsU</string>
+	<string>AIzaSyDKG0b5aZl5P7qzk2wpxqjfUI8CNa6ZQpc</string>
 	<key>GCM_SENDER_ID</key>
-	<string>402768865765</string>
+	<string>49828814435</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.harrisonferrone.firequest</string>
+	<string>com.paradigmdev.firebasedebugger</string>
 	<key>PROJECT_ID</key>
-	<string>firequest-f40a2</string>
+	<string>fir-debugger</string>
 	<key>STORAGE_BUCKET</key>
-	<string>firequest-f40a2.appspot.com</string>
+	<string>fir-debugger.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<true></true>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -33,8 +33,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:402768865765:ios:5fd597e1cf7fbf70</string>
+	<string>1:49828814435:ios:7bf129fb997b9ac3</string>
 	<key>DATABASE_URL</key>
-	<string>https://firequest-f40a2.firebaseio.com</string>
+	<string>https://fir-debugger.firebaseio.com</string>
 </dict>
 </plist>
