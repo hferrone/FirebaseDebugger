@@ -1,5 +1,5 @@
 # FirebaseDebugger
-A user-friendly Unity Editor Window for debugging Firebase Realtime Database functionality in Unity projects.
+A user-friendly Unity Editor Window for debugging a Firebase Realtime Database project.
 
 
 The idea for this tool started after my third or fourth Unity + Firebase project. I'd been getting frustrated with having to write long debug logs every time I wanted to check interactions with Firebase's Realtime Database. So in short, I decided to learn about Unity Editor Extensions, which I had wanted to do for a long time, and scratch my own usability itch in the process.
@@ -10,9 +10,10 @@ Alright, let's get up and running.
 
 ### Prerequisites
 
-First off, you'll need to have the Firebase SDK integrated into your project, specifically the <i>FirebaseDatabase.unitypackage</i>. If you haven't already done this, here is a link to the general Unity [setup](https://firebase.google.com/docs/unity/setup) and the Realtime Database [instructions](https://firebase.google.com/docs/database/unity/start). 
+* <b>FirebaseDatabase.unitypackage</b> from the <b>Firebase SDK</b>
+* <b>GoogleService-Info.plist</b> file somewhere in the project
 
-Don't forget to put your GoogleService-Info.plist file into the project.
+If you haven't already done this, here is a link to the general Unity [setup](https://firebase.google.com/docs/unity/setup) and the Realtime Database [instructions](https://firebase.google.com/docs/database/unity/start). 
 
 ### Installing
 
@@ -20,18 +21,17 @@ You can download FirebaseDebugger from the [Unity Asset Store](https://assetstor
 
 ### Setup
 
-Almost all of the setup for this tool is done programmatically, so the only thing you're responsible for is going to Tools > FBDebugger and clicking Setup...
+Almost all of the setup for this tool is done programmatically, so the only thing you're responsible for is going to <b>Tools > FBDebugger > Setup</b>
 
 ![Basic Setup](https://user-images.githubusercontent.com/8218795/37569699-6214c5be-2ae6-11e8-829e-99980a40eae7.png)
 
-...and assigning your <i>GoogleService-Info.plist</i> to the Firebase Manager GameObject in the Inspector. 
+And assigning your <i>GoogleService-Info.plist</i> to the <b>Firebase Manager</b> GameObject in the Inspector. 
 
 ![Setting GoogleService-Info.plist](https://user-images.githubusercontent.com/8218795/37569738-e6417508-2ae6-11e8-87f2-3b411d657372.png)
 
-The setup menu item will only be active if Unity is NOT in Play Mode, and the setup hasn't already been completed. I've done my best to create a sort of setup 'happy-path', so if you try and do anything out of order or in the wrong editor mode don't worry, there will be message dialogs to guide you back on track.
+The setup menu item will only be active if Unity is <b>NOT</b> in Play Mode, and the setup hasn't already been completed. I've done my best to create a sort of setup 'happy-path', so if you try and do anything out of order or in the wrong editor mode don't worry, there will be message dialogs to guide you back on track.
 
 ![Editor Display Messages](https://user-images.githubusercontent.com/8218795/37569700-6860128e-2ae6-11e8-8c2f-42846a138c79.png)
-
 
 I wanted to make this as intuitive and easy as possible, so that's really all the setup there is.
 
@@ -41,13 +41,9 @@ If you need some tips, can't figure something out, or just want to send us some 
 
 ## Using the FBDebuggerWindow
 
-After the setup is complete, you can open the debug window in Play Mode with:
+After the setup is complete, you can open the debug window in Play Mode by hitting the <b>F key</b> OR <b>Tools > FBDebugger > Show Debugger</b>
 
-```
-F key OR Tools > FBDebugger > Show Debugger.
-```
-
-The Firebase Manager is already set up with a singleton script that handles all the Firebase functionality, so you don't have to worry about initializing the debugger if you switch scenes.
+The <b>Firebase Manager</b> GameObject is already set up with a Singleton script that handles all the Firebase functionality, so you don't have to worry about initializing the debugger if you switch scenes.
 
 On startup the debugger will automatically display all data at the project root, and will close itself when you exit Play Mode to keep the Firebase SDK happy and your console error-free.
 
@@ -55,7 +51,7 @@ On startup the debugger will automatically display all data at the project root,
 
 ### Drilling into your data
 
-Getting into your data is pretty simple. Enter the key, or nested keys, in the Child Nodes array and hit Query. This will construct a Database Reference and return all its data up to single key-value pairs. 
+Getting into your data is pretty simple. Enter the key, or nested keys, in the <b>Child Nodes</b> array and hit Query. This will construct a Database Reference and return all its data up to single key-value pairs. 
 
 In the example screenshots below, I can access a single players data by entering my parent node <i>players</i> and a user key. 
 
@@ -73,8 +69,8 @@ By default there are no options selected, but you can use the dropdowns to targe
 
 The data mapping option will let you test if you're unpacking your snapshots correctly, and will also give you a handy list of all the snapshot keys by default. 
 
-Any class that you want to map Firebase snapshots to will need to be derived from <i>GenericMappable</i>. 
-<i>GenericMappable</i> is a simple abstract class that inherits from ScriptableObject.
+Any class that you want to map Firebase snapshots to will need to be derived from <b>GenericMappable</b>. 
+<i>GenericMappable</i> is a simple abstract class that inherits from <b>ScriptableObject</b>.
 
 ```
 public abstract class GenericMappable : ScriptableObject
@@ -90,7 +86,7 @@ public abstract class GenericMappable : ScriptableObject
 }
 ```
 
-You will need to implement the <i>Map</i> method to comply with <i>GenericMappable</i>, which is where you'd put in any snapshot unpacking logic you're working with.
+You will need to implement the <b>Map</b> method to comply with <b>GenericMappable</b>, which is where you'd put in any snapshot unpacking logic you're working with.
 
 For the example below I've also unpacked the <i>Email</i>, <i>Score</i>, and <i>Level</i> fields with the following code: 
 
