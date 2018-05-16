@@ -25,7 +25,7 @@ Almost all of the setup for this tool is done programmatically, so the only thin
 
 ![Basic Setup](https://user-images.githubusercontent.com/8218795/37569699-6214c5be-2ae6-11e8-829e-99980a40eae7.png)
 
-And assigning your <i>GoogleService-Info.plist</i> to the <b>Firebase Manager</b> GameObject in the Inspector. 
+And assigning your <b>GoogleService-Info.plist</b> to the <b>Firebase Manager</b> GameObject in the Inspector. 
 
 ![Setting GoogleService-Info.plist](https://user-images.githubusercontent.com/8218795/37569738-e6417508-2ae6-11e8-87f2-3b411d657372.png)
 
