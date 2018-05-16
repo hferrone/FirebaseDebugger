@@ -1,88 +1,118 @@
 # FirebaseDebugger
-A user-friendly Unity Editor Window for debugging Firebase Realtime Database functionality in Unity projects.
+A user-friendly Unity Editor Window for debugging a Firebase Realtime Database project.
 
 
 The idea for this tool started after my third or fourth Unity + Firebase project. I'd been getting frustrated with having to write long debug logs every time I wanted to check interactions with Firebase's Realtime Database. So in short, I decided to learn about Unity Editor Extensions, which I had wanted to do for a long time, and scratch my own usability itch in the process.
 
 ## Getting Started
 
-Alright, let's get you up and running.
+Alright, let's get up and running.
 
 ### Prerequisites
 
-First off, you'll need to have Firebase integrated into your project. I'm assuming that since you're using this tool that's already the case, but [here is the general setup link](https://firebase.google.com/docs/unity/setup) and the [Realtime Database setup](https://firebase.google.com/docs/database/unity/start). 
+* <b>FirebaseDatabase.unitypackage</b> from the <b>Firebase SDK</b>
+* <b>GoogleService-Info.plist</b> file somewhere in the project
+* A working internet connection
 
-Don't forget to put your GoogleService-Info.plist file into the project, as that's how the Editor Window establishes an automatic connection with your project.
+If you haven't already done this, here is a link to the general Unity [setup](https://firebase.google.com/docs/unity/setup) and the Realtime Database [instructions](https://firebase.google.com/docs/database/unity/start). 
 
 ### Installing
 
-You can download FirebaseDebugger from the [Unity Asset Store](https://assetstore.unity.com/) (preferred method), or you can download the whole project from the repo and drag/drop the entire Tools folder into your project.
+You can download <b>FirebaseDebugger</b> from the [Unity Asset Store](https://assetstore.unity.com/) (preferred method), or you can download the whole project from the repo and drag/drop the entire Tools folder into your project.
 
 ### Setup
 
-All the setup for this tool is done programmatically, so the only thing you're responsible for is going to Tools > FBDebugger and clicking Setup. 
-
+Almost all of the setup for this tool is done programmatically, so the only thing you're responsible for is going to <b>Tools > FBDebugger > Setup</b>
 
 ![Basic Setup](https://user-images.githubusercontent.com/8218795/37569699-6214c5be-2ae6-11e8-829e-99980a40eae7.png)
 
-
-The setup menu item will only be active if Unity is NOT in Play Mode, and the setup hasn't already been completed. I've done my best to create a sort of setup 'happy-path', so if you try and do anything out of order or in the wrong editor mode don't worry, there will be message dialogs to guide you back on track.
-
-
-![Editor Display Messages](https://user-images.githubusercontent.com/8218795/37569700-6860128e-2ae6-11e8-8c2f-42846a138c79.png)
-
-
-After the setup is done, select the Firebase Manager game object and assign your GoogleService-Info.plist in the Inspector.
-
+And assigning your <b>GoogleService-Info.plist</b> to the <b>Firebase Manager</b> GameObject in the Inspector. 
 
 ![Setting GoogleService-Info.plist](https://user-images.githubusercontent.com/8218795/37569738-e6417508-2ae6-11e8-87f2-3b411d657372.png)
 
+The setup menu item will only be active if Unity is <b>NOT</b> in Play Mode, and the setup hasn't already been completed. I've done my best to create a sort of setup 'happy-path', so if you try and do anything out of order or in the wrong editor mode don't worry, there will be message dialogs to guide you back on track.
+
+![Editor Display Messages](https://user-images.githubusercontent.com/8218795/37569700-6860128e-2ae6-11e8-8c2f-42846a138c79.png)
 
 I wanted to make this as intuitive and easy as possible, so that's really all the setup there is.
 
 ### Help
 
-If you need some tips, can't figure something out, or just want to send us some feedback about the tool, access the <i>Help</i> page by:
-
-```
-H key || Tools > FBDebugger > Help.
-```
+If you need some tips, can't figure something out, or just want to send us some feedback about the tool, just use the big <b>Help</b> button in the bottom right corner of the Editor Window.
 
 ## Using the FBDebuggerWindow
 
-After the setup is complete, you can open the debug window in Play Mode with:
+After the setup is complete, you can open the debug window in Play Mode by hitting the <b>F key</b> OR <b>Tools > FBDebugger > Show Debugger</b>
 
-```
-F key || Tools > FBDebugger > Show Debugger.
-```
+The <b>Firebase Manager</b> GameObject is already set up with a Singleton script that handles all the Firebase functionality, so you don't have to worry about initializing the debugger if you switch scenes.
 
-The Firebase Manager is already set up with a singleton script that handles all the Firebase functionality, so you'll don't have to worry about initializing the debugger if you switch scenes.
+On startup the debugger will automatically display all data at the project root, and will close itself when you exit Play Mode to keep the Firebase SDK happy and your console error-free.
 
-On startup the debugger will display all data at your project root automatically, and will close itself when you exit Play Mode to keep the Firebase SDK happy and your console error-free.
-
-![screen shot 2018-03-27 at 20 04 45](https://user-images.githubusercontent.com/8218795/37986013-aa8b6ee0-31fa-11e8-8588-e5d97db4b593.png)
+![root data](https://user-images.githubusercontent.com/8218795/40130378-22ebd8a8-5937-11e8-9fc0-0167917bacf0.png)
 
 ### Drilling into your data
 
-Getting into your data is pretty simple. Enter the key, or nested keys, into the Child Nodes array and hit Query. This will construct a Database Reference and return all its data up to single key-value pairs. 
+Getting into your data is pretty simple. Enter the key, or nested keys, in the <b>Child Nodes</b> array and hit Query. This will construct a Database Reference and return all its data up to single key-value pairs. 
 
 In the example screenshots below, I can access a single players data by entering my parent node <i>players</i> and a user key. 
 
-![screen shot 2018-03-27 at 20 05 30](https://user-images.githubusercontent.com/8218795/37986015-aaa621ea-31fa-11e8-8f80-76c797a67eb6.png)
+![child data](https://user-images.githubusercontent.com/8218795/40130479-6d30d904-5937-11e8-9b9c-e6fa379242ee.png)
 
 ### Sorting and filtering
 
-For this first release only sorting and one filtering option can be applied to a given reference. In the next releases we're hoping to expand this to incorporate multiple filtering options to mirror what Firebase supports.
+For this first release only one sorting and filtering option can be applied to a given reference. In the next releases this will be expanded to incorporate multiple filtering options to mirror what Firebase supports.
 
-By default there are no options selected, but you can use the dropdowns to target specific data, and where applicable enter sorting/filtering values.
+By default there are no options selected, but you can use the dropdowns to target specific data, and where applicable enter sorting/filtering values. In the following example, I've sorted by <i>exp</i> and limited the query to the first three entries.
+
+![sort and filter](https://user-images.githubusercontent.com/8218795/40130564-bba47c6c-5937-11e8-982a-ea68c33652e1.png)
 
 ### Data snapshot mapping
 
-Explain what these tests test and why
+The data mapping option will let you test if you're unpacking your snapshots correctly, and will also give you a handy list of all the snapshot keys by default. 
+
+Any class that you want to map Firebase snapshots to will need to be derived from <b>GenericMappable</b>. 
+<i>GenericMappable</i> is a simple abstract class that inherits from <b>ScriptableObject</b>.
 
 ```
-Give an example
+public abstract class GenericMappable : ScriptableObject
+{
+	public List<string> Keys = new List<string>();
+	public abstract void Map(Dictionary<string, object> withDictionary);
+
+	public virtual void ParseKeys(Dictionary<string, object> withDictionary)
+	{
+		foreach(KeyValuePair<string, object> entry in withDictionary)
+			Keys.Add(entry.Key);
+	}
+}
 ```
+
+You will need to implement the <b>Map</b> method to comply with <b>GenericMappable</b>, which is where you'd put in any snapshot unpacking logic you're working with.
+
+For the example below I've also unpacked the <i>Email</i>, <i>Score</i>, and <i>Level</i> fields with the following code: 
+
+```
+public class TestMapClass : GenericMappable
+{
+	public string email;
+	public int score;
+	public int level;
+
+	public override void Map(Dictionary<string, object> withDictionary)
+	{
+		if (withDictionary.ContainsKey("email"))
+		{
+			email = withDictionary["email"].ToString();
+			score = Convert.ToInt32(withDictionary["score"]);
+			level = Convert.ToInt32(withDictionary["level"]);
+		}
+	}
+}
+```
+
+With the result:
+
+![mapping](https://user-images.githubusercontent.com/8218795/40130756-4235963a-5938-11e8-801b-1762f2ec1d82.png)
 
 ## Built With
 
@@ -117,4 +147,3 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 * [Extending Unity with Editor Scripting](https://www.packtpub.com/game-development/extending-unity-editor-scripting) by Angelo Tadres
 * [Property list parser](http://www.chrisdanielson.com/2011/05/09/using-apple-property-list-files-with-unity3d/) by Chris Danielson
-* [simple-firebase-unity](https://github.com/dkrprasetya/simple-firebase-unity)
