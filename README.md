@@ -18,7 +18,7 @@ If you haven't already done this, here is a link to the general Unity [setup](ht
 
 ### Installing
 
-You can download <b>FirebaseDebugger</b> from the [Unity Asset Store](https://assetstore.unity.com/) (preferred method), or you can download the whole project from the repo and drag/drop the entire Tools folder into your project.
+You can download <b>FirebaseDebugger</b> from the <b>Unity Asset Store</b> [here](https://assetstore.unity.com/).
 
 ### Setup
 
@@ -26,7 +26,7 @@ Almost all of the setup for this tool is done programmatically, so the only thin
 
 ![Basic Setup](https://user-images.githubusercontent.com/8218795/37569699-6214c5be-2ae6-11e8-829e-99980a40eae7.png)
 
-And assigning your <b>GoogleService-Info.plist</b> to the <b>Firebase Manager</b> GameObject in the Inspector. 
+And assigning your <b>GoogleService-Info.plist</b> to the <b>Firebase Manager</b> GameObject that is created for you in the Inspector. 
 
 ![Setting GoogleService-Info.plist](https://user-images.githubusercontent.com/8218795/37569738-e6417508-2ae6-11e8-87f2-3b411d657372.png)
 
@@ -39,6 +39,8 @@ I wanted to make this as intuitive and easy as possible, so that's really all th
 ### Help
 
 If you need some tips, can't figure something out, or just want to send us some feedback about the tool, just use the big <b>Help</b> button in the bottom right corner of the Editor Window.
+
+You can send any constructive criticism, requests, or really anything not negative to <b>paradigmshiftdev@gmail.com</b>
 
 ## Using the FBDebuggerWindow
 
@@ -89,7 +91,7 @@ public abstract class GenericMappable : ScriptableObject
 
 You will need to implement the <b>Map</b> method to comply with <b>GenericMappable</b>, which is where you'd put in any snapshot unpacking logic you're working with.
 
-For the example below I've also unpacked the <i>Email</i>, <i>Score</i>, and <i>Level</i> fields with the following code: 
+For the example below I've unpacked the <i>email</i>, <i>score</i>, and <i>exp</i> fields with the following code: 
 
 ```
 public class TestMapClass : GenericMappable
@@ -104,7 +106,7 @@ public class TestMapClass : GenericMappable
 		{
 			email = withDictionary["email"].ToString();
 			score = Convert.ToInt32(withDictionary["score"]);
-			level = Convert.ToInt32(withDictionary["level"]);
+			level = Convert.ToInt32(withDictionary["exp"]);
 		}
 	}
 }
@@ -112,7 +114,7 @@ public class TestMapClass : GenericMappable
 
 With the result:
 
-![mapping](https://user-images.githubusercontent.com/8218795/40130756-4235963a-5938-11e8-801b-1762f2ec1d82.png)
+![data mapping](https://user-images.githubusercontent.com/8218795/40270131-317d5d08-5b88-11e8-9f7c-f08cdb1a37eb.png)
 
 ## Built With
 
@@ -123,6 +125,7 @@ With the result:
 
 * Add in multiple filtering option functionality
 * Add save/load/edit settings feature using Scriptable Objects
+* Create custom editor for mapping class display
 * Refactor debug area into [TreeView](https://docs.unity3d.com/Manual/TreeViewAPI.html)
 
 ## Contributing
