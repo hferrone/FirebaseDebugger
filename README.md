@@ -40,7 +40,7 @@ I wanted to make this as intuitive and easy as possible, so that's really all th
 
 If you need some tips, can't figure something out, or just want to send us some feedback about the tool, just use the big <b>Help</b> button in the bottom right corner of the Editor Window.
 
-You can send any constructive criticism, requests, or really anything not negative to <b>paradigmshiftdev@gmail.com</b>
+You can send any constructive criticism, requests, or really anything not negative to <b>hferrone@paradigmshiftdev.com</b>
 
 ## Using the FBDebuggerWindow
 
